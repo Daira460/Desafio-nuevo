@@ -1,0 +1,271 @@
+:root {
+    --color-primary: #3f51b5; 
+    --color-secondary: #ff5722; 
+  }
+  
+  body {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+  }
+  
+  h1 {
+    color: var(--color-primary);
+    font-size: 30px;
+    text-align: center;
+    padding-top: 20px;
+    font-weight: bold;
+  }
+  
+  h2 {
+    font-size: 20px;
+    text-align: center;
+    padding-top: 20px;
+  }
+  
+  .botonesPage {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .card {
+    width: 14rem;
+  }
+  
+  .card-img-top {
+    height: 17rem;
+  }
+  
+  .precioYCant {
+    font-size: 15px;
+  }
+  
+  .card-title {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .btn2 {
+    background: linear-gradient(
+      82.3deg,
+      rgba(150, 93, 233, 1) 10.8%,
+      rgba(99, 88, 238, 1) 94.3%
+    );
+    color: #fff;
+    margin: 0px 40px 10px 40px;
+  }
+  
+  .btn2:hover {
+    color: #fff;
+  }
+  
+  .contenedorProducto {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    margin: 40px;
+    gap: 50px;
+    text-align: center;
+    justify-items: center;
+  }
+  
+  @media screen and (min-width: 600px) {
+    .contenedorProducto {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .contenedorProducto {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media screen and (min-width: 1400px) {
+    .contenedorProducto {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  
+  .tituloPage {
+    font-size: 30px;
+    text-align: center;
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  section form input {
+    width: 300px !important;
+  }
+  
+  .carritoFinal {
+    display: grid;
+    margin: 0px 20px 10px 20px;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .imgCarrito {
+    width: 40px;
+    height: 60px;
+    border-radius: 10%;
+  }
+  
+  .iconoBasura {
+    border: 0px;
+    background-color: transparent;
+  }
+  
+  .parrafoCarrito {
+    margin: 0px;
+    font-size: 2.5vw;
+  }
+  
+  @media screen and (min-width: 600px) {
+    .carritoFinal {
+      margin: 0px 50px 0px 50px;
+    }
+  
+    .imgCarrito {
+      width: 80px;
+      height: 110px;
+      border-radius: 10%;
+    }
+  
+    .parrafoCarrito {
+      font-size: 16px;
+    }
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .carritoFinal {
+      margin: 0px 100px 20px 100px;
+    }
+  
+    .imgCarrito {
+      width: 100px;
+      height: 130px;
+      border-radius: 10%;
+    }
+  
+    .parrafoCarrito {
+      font-size: 20px;
+    }
+  }
+  
+  .alineadoCarrito {
+    display: grid;
+    margin: 20px 20px 0px 20px;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    justify-items: center;
+    font-size: 200px;
+  }
+  
+  .totalPrecio {
+    display: grid;
+    margin: 0px 20px 0px 20px;
+    grid-template-columns: repeat(6, 1fr);
+    text-align: center;
+    font-weight: 900;
+    align-items: center;
+    justify-items: center;
+  }
+  
+  .totalTexto {
+    margin-bottom: 0px;
+    font-weight: bold;
+    font-size: 3vw;
+  }
+  
+  .tituloCarrito {
+    margin: 0px;
+    font-size: 3vw;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .tamañoLinea {
+    margin: 10px 20px 10px 20px;
+  }
+  
+  .bi {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .contenedorTachito {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: rgb(226, 45, 45);
+    border-radius: 4px;
+  }
+  
+  .cancelarCompra {
+    position: relative;
+    background-color: rgb(230, 34, 77);
+    border-radius: 5px;
+    box-shadow: rgb(121, 18, 55) 0px 4px 0px 0px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 2vw;
+    transition: all .3s ease-in-out;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .cancelarCompra::before {
+    content: "";
+    background-color: rgb(248, 50, 93);
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: width 700ms ease-in-out;
+    display: inline-block;
+  }
+  
+  .cancelarCompra:hover::before {
+    width: 100%;
+  }
+  
+  .contenedorCarritoVacio {
+    text-align: center;
+  }
+  
+  .h2CarritoVacio {
+    font-size: 30px;
+    margin: 30px 0px 30px 0px;
+  }
+  
+ 
+  .contenedorCheckout {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0px 30px 0px;
+  }
+  
+  .checkout {
+    color: purple;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid purple;
+    padding: 10px 20px;
+    font-size: 2vw;}
+  
