@@ -5,7 +5,7 @@ const handlebars = require('express-handlebars')
 const { port } = require('./src/config/server.config');
 const mongoConnect = require('./src/db')
 const chats = []
-const Messages = require ('./DAO/models/messages.model')
+const Messages = require ('./src/DAO/models/messages.model')
 const session = require('express-session');
 
 const app = express()
