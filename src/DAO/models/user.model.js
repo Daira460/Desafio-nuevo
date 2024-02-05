@@ -13,8 +13,12 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: {
         type:String,
+        enum: ['user', 'admin'],
         default: 'user'
-    } 
+    },
+    githubId: Number,
+    githubUsername: String,
+
 })
 const Users = mongoose.model (userColletion, userSchema)
 

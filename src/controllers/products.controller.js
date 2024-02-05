@@ -15,7 +15,7 @@ const limitValue = limit ? parseInt(limit) : 10
         {$and:[ 
             { status: true},
             { category: category ? { $eq: category } : { $exists: true } },
-            { stock: stock ? { $eq: stock } : { $exists: true }} //cantidad de stock
+            { stock: stock ? { $eq: stock } : { $exists: true }} 
         ]
         }, 
         {   page,

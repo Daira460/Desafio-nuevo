@@ -13,10 +13,21 @@ function submitForm() {
         },
         body: JSON.stringify(formData),
     })
-    .then(response => response.json())
-    .then(formData => {
-        console.log(formData)
-        window.location.href = '/login'
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al registrar usuario');
+        }
+        return response.json();
     })
-    .catch(error => console.error('Error:', error))
+    .then(formData => {
+        window.location.href = '/login';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Error, el correo ya se encuentra registrado",
+          });
+    });
 }

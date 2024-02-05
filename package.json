@@ -8,7 +8,6 @@
     "start:dev": "nodemon app.js",
     "start": "node app.js"
   },
-    
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,9 +20,12 @@
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
     "mongodb": "^6.3.0",
-    "mongoose": "^8.0.4",
+    "mongoose": "^8.1.1",
     "mongoose-paginate-v2": "^1.8.0",
     "moongoose": "^0.0.5",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-local": "^1.0.0",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {

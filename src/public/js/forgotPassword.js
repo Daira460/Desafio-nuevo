@@ -3,8 +3,7 @@ function submitForm() {
         email: document.getElementById('usuario').value.toUpperCase(),
         password: document.getElementById('password').value,
     }
-
-    fetch('/api/auth', {
+    fetch('/api/auth/forgotPassword', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -13,14 +12,14 @@ function submitForm() {
     })
     .then(response => response.json())
     .then(responseData => {
-        if (responseData.status === 'success') { 
-            window.location.href = '/api/products'; 
+        if (responseData.status === 'Success') { 
+            window.location.href = '/login'; 
         } else {
-            console.log("Inicio de sesión fallido")
+            console.log("Error al restaurar la clave")
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "Usuario o Contraseña incorrecta",
+                text: "Email incorrecto",
               });
         }
     })
@@ -28,6 +27,7 @@ function submitForm() {
 }
 
 const registrate = document.getElementById('Registrate')
+
 
 registrate.addEventListener('click', () => {
     window.location.href = '/signup'
