@@ -1,14 +1,15 @@
 const express = require('express')
-const router = require('./router/router')
-const { port } = require('./configs/server.config')
+const router = require('./src/router/router')
+const { port } = require('./src/config/server.config')
 const { Server } = require("socket.io")
 const handlebars = require('express-handlebars')
-const mongoConnect = require('./db')
+const mongoConnect = require('./src/db')
 const chats = []
-const Messages = require ('./DAO/models/messages.model')
+const Messages = require ('./src/DAO/models/messages.model')
 const session = require('express-session');
-const initializePassport = require('./configs/passport.config')
+const initializePassport = require('./src/config/passport.config')
 const passport = require('passport')
+
 
 const app = express()
 

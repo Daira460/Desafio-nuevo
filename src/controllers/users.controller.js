@@ -1,7 +1,8 @@
 const { Router } = require('express')
 const Users = require('../DAO/models/user.model')
 const router = Router()
-const passport = requiere ('passport')
+const passport = require ('passport')
+
 
 router.post ('/', passport.authenticate('register', {failureRedirect: '/api/users/fail-Register'}),  async (req, res) => {
     try {

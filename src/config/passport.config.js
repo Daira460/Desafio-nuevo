@@ -38,7 +38,7 @@ const initializePassport = () => {
 
     passport.use('login',  new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
         try {
-            const user = await Users.findOne({ email: username })
+            const user = await Users.findOne ({githubId: id})
         if (!user) {
             console.log ('usuario no existe')
             return done (null, false)
@@ -56,7 +56,7 @@ const initializePassport = () => {
     passport.use ('github', new GithubStrategy ({
         clientID: ghClientId,
         clientSecret: ghClientSecret,
-        callbackURL: "http://localhost:8080/api/auth/githubcallback"
+        callbackURL: "http://localhost:3000/api/auth/githubcallback"
     }, async (accessToken, refreshToken, profile, done) =>  {
         try {
             const {id, login, name, email} = profile._json

@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const Users = require('../DAO/models/user.model')
-const {createHash} = requiere ('../utils/cryp-password.util')
-const passport = requiere ('passport')
+const {createHash} = require ('../utils/cryp-password.util')
+const passport = require ('passport')
 const router = Router()
 
 router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-login'}) , async (req, res) => {
