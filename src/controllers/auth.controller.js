@@ -25,7 +25,7 @@ router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-l
 
 router.get('/current', (req, res) => {
     if (req.isAuthenticated()) {
-        res.json({ message: req.user });
+        res.json({ message: req.session.user });
     } else {
         res.status(401).json({ message: 'User is not authenticated' });
     }

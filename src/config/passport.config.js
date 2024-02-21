@@ -38,7 +38,7 @@ const initializePassport = () => {
 
     passport.use('login',  new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
         try {
-            const user = await Users.findOne ({githubId: id})
+            const user = await Users.findOne ({email: username})
         if (!user) {
             console.log ('usuario no existe')
             return done (null, false)
