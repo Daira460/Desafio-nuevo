@@ -4,6 +4,7 @@ function submitForm() {
         password: document.getElementById('password').value,
     }
 
+
     fetch('/api/auth', {
         method: 'POST',
         headers: {
@@ -11,20 +12,27 @@ function submitForm() {
         },
         body: JSON.stringify(formData),
     })
-    .then(response => response.json())
-    .then(responseData => {
-        if (responseData.status === 'success') { 
-            window.location.href = '/api/products'; 
+    .then(response => {
+        if (response.ok) { 
+            return response.json()
         } else {
-            console.log("Inicio de sesión fallido")
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Usuario o Contraseña incorrecta",
-              });
+            throw new Error('Unauthorized') 
         }
     })
-    .catch(error => console.error('Error:', error))
+    .then(responseData => {
+        
+        if (responseData.status === 'success') { 
+            window.location.href = '/api/products'
+        } 
+    })
+    .catch(error => {
+        console.error('Error:', error)
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Usuario o Contraseña incorrecta",
+        })
+    })
 }
 
 const registrate = document.getElementById('Registrate')
