@@ -1,4 +1,4 @@
-const CartDao = require ('../DAO/cart-dao.mongo')
+const CartDao = require ('../DAO//cart-dao.mongo.js')
 const Cart = new CartDao()
 
 const addCart = async () => {

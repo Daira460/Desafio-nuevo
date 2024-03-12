@@ -1,12 +1,11 @@
-
 const passport = require ('passport')
 const local = require ('passport-local')
 const GithubStrategy = require ('passport-github2')
-const Users = require('../DAO/models/user.model')
-const { createHash, useValidPassword } = require('../utils/cryp-password.util')
+const { useValidPassword } = require('../utils/cryp-password.util')
 const { ghClientId, ghClientSecret } = require('../config/server.config')
-const Users = require('../DAO/models/user.model')
+const NewUserDto = require('../DTO/new-user.dto')
 const UserService = require ('../services/user.service')
+const Users = require('../DAO/models/user.model')
 
 
 const LocalStrategy = local.Strategy
@@ -18,12 +17,12 @@ const initializePassport = () => {
        {passReqToCallback: true, usernameField: 'email'},
        async (req, username, password, done) => {
         try {
-        const {first_name, last_name, age, email} = req.body
         const user = await Users.findOne ({email: username})
         if(user) {
-            console.log ('User Exists')
+            console.log ('El correo ya se encuentra registrado')
             return done (null, false)
         }
+
         const NewUserInfo = new NewUserDto (req.body, password)
         const createdUser = await UserService.createUser(NewUserInfo)
         return done (null, createdUser)
@@ -35,13 +34,13 @@ const initializePassport = () => {
 
     passport.use('login',  new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
         try {
-            const user = await Users.findOne ({email: username})
+            const user = await Users.findOne({ email: username })
         if (!user) {
-            console.log ('usuario no existe')
+            console.log ('usuario o contraseña incorrecta')
             return done (null, false)
         }
         if (!useValidPassword (user, password)) {
-            console.log ('password incorrecta')
+            console.log ('usuario o contraseña incorrecta')
             return done (null, error)
         }
         return done (null, user)
@@ -75,6 +74,8 @@ const initializePassport = () => {
         }
     }));
 
+    
+
     passport.serializeUser((user, done) => {
         done(null, user._id)
     })
@@ -87,10 +88,8 @@ const initializePassport = () => {
             done(error)
         }
     } )
-
     
 }
-
 
 
 module.exports = initializePassport

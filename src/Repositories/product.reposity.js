@@ -1,4 +1,4 @@
-const ProductDao = require('../DAO/product-dao.mongo')
+const ProductDao = require('../DAO/product-dao.mongo.js')
 
 
 class ProductRepository {

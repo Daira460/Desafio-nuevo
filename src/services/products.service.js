@@ -1,8 +1,5 @@
-const ProductDao = require ('../DAO/product-dao.mongo')
-const Product = new ProductDao()
 const ProductRepository = require ('../Repositories/product.reposity.js')
-
-const ProductRepository = new ProductRepository()
+const productRepository = new ProductRepository()
 
 const getProductByID = async pid => {
     try {

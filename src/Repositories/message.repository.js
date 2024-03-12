@@ -1,7 +1,12 @@
-const MailAdapter = require('../Adapter/mail.adapter')
-const MessageRepository = require ('./message.repository')
-const messageManager = new MessageRepository(new MailAdapter())
 
+class MessageRepository {
+    constructor(adapter){
+        this.adapter = adapter
+    }
 
+    async sendMessage(messageInfo){
+        await this.adapter.sendMessage(messageInfo)
+    }
+}
 
-module.exports = messageManager
+module.exports = MessageRepository
