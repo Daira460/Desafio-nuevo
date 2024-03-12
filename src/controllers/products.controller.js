@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const router = Router()
 const ProductsService = require ('../services/products.service.js')
-const { getProducts } = require('../utils/products.util.js')
+const { getProducts } = require('../utils/products.util')
 const authorization = require('../middlewares/authorization-middleware.js')
 
 

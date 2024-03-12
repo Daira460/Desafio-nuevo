@@ -1,5 +1,5 @@
 const NewProductDto = require('../DTO/new-product.dto.js');
-const Products = require('./models/products.model')
+const Products = require('../DAO/models/products.model')
 
 class ProductDao {
 

@@ -1,5 +1,5 @@
 const transport = require('../utils/nodemailer.util')
-const { userEmail } = require('../configs/app.config')
+const { userEmail } = require('../config/server.config')
 
 
 class MailAdapter {

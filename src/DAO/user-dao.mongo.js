@@ -1,4 +1,4 @@
-const Users = require('./models/user.model')
+const Users = require('../DAO/models/user.model')
 
 class UserDao {
     async getUserById(uid) {

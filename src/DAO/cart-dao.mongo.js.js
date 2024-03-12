@@ -1,4 +1,4 @@
-const Carts = require('./models/carts.model.js')
+const Carts = require('../DAO/models/carts.model.js')
 const ProductsService = require ('../services/products.service.js')
 const mongoose = require('mongoose')
 

@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-const authorization = require('../middlewares/authorization-middleware.js')
+const authorization = require('../middlewares/authorization-middleware')
 
 router.get('/', authorization('user'), async (req, res) => {
     try {
