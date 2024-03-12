@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const cid = this.dataset.cid
             const pid = this.dataset.pid
 
-            console.log('CID:', cid)
-            console.log('PID:', pid)
+    
             fetch(`/api/carts/${cid}/products/${pid}`, {
                 method: 'DELETE',
             })
+            
             .then(response => response.json())
             .then(data => {
                 console.log(data)

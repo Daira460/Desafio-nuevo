@@ -5,8 +5,9 @@ const GithubStrategy = require ('passport-github2')
 const Users = require('../DAO/models/user.model')
 const { createHash, useValidPassword } = require('../utils/cryp-password.util')
 const { ghClientId, ghClientSecret } = require('./server.config')
-const UserService = require ('../services/user.service')
 const Users = require('../DAO/models/user.model')
+const UserService = require ('../services/user.service')
+
 
 const LocalStrategy = local.Strategy
 
@@ -23,15 +24,9 @@ const initializePassport = () => {
             console.log ('User Exists')
             return done (null, false)
         }
-        const newUserInfo = {
-            first_name,
-            last_name,
-            age,
-            email,
-            password: createHash (password),
-        }
-        const newUser = await Users.create(newUserInfo)
-        return done (null, newUser)
+        const NewUserInfo = new NewUserDto (req.body, password)
+        const createdUser = await UserService.createUser(NewUserInfo)
+        return done (null, createdUser)
         } catch (error) {
             return done (error)
         }
@@ -70,15 +65,15 @@ const initializePassport = () => {
                     githubId: id,
                     githubUsername: login,
                 }
-                const newUser = await Users.create(newUserInfo)
-                return done (null, newUser)
-            } return done (null, user)
-           
+                user = await Users.create(newUserInfo);
+            }
+            console.log('Usuario actualizado con éxito:', user);
+            done(null, user);
         } catch (error) {
-            console.log (error)
+            console.error('Error:', error);
+            done(error); 
         }
-     })
-    )
+    }));
 
     passport.serializeUser((user, done) => {
         done(null, user._id)
@@ -86,7 +81,7 @@ const initializePassport = () => {
 
     passport.deserializeUser(async (id, done) => {
         try {
-            const user = await Users.findById(id)
+            const user = await Users.findById(id, { password: 0 })
             done(null, user)
         } catch (error) {
             done(error)
@@ -95,6 +90,7 @@ const initializePassport = () => {
 
     
 }
+
 
 
 module.exports = initializePassport

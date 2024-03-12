@@ -2,6 +2,7 @@ const { Router } = require('express')
 const Users = require('../DAO/models/user.model')
 const {createHash} = require ('../utils/cryp-password.util')
 const passport = require ('passport')
+const SensibleDTO = require ('../DTO/sensible-user')
 const router = Router()
 
 router.post('/', passport.authenticate('login', { failureRedirect: '/auth/fail-login' }), async (req, res) => {
@@ -16,7 +17,7 @@ router.post('/', passport.authenticate('login', { failureRedirect: '/auth/fail-l
             age: req.user.age,
             role: req.user.role,
         };
-        res.json({ status: 'success', message: 'Login Succesfull' });
+        res.json({ status: 'success', message: 'Login Exitoso' });
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -25,11 +26,14 @@ router.post('/', passport.authenticate('login', { failureRedirect: '/auth/fail-l
 
 router.get('/current', (req, res) => {
     if (req.isAuthenticated()) {
-        res.json({ message: req.session.user });
+
+        const userDTO = new SensibleDTO(req.user)
+        res.json({ message: userDTO })
     } else {
-        res.status(401).json({ message: 'User is not authenticated' });
+
+        res.status(401).json({status: 'error', message: 'User not authenticated' })
     }
-});
+})
 
 router.get('/fail-login', (req, res) => {
     console.log('Fallo el logueo');

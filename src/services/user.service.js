@@ -1,8 +1,10 @@
 const UserDao = require ('../DAO/user-dao.mongo')
 const User = new UserDao()
+const messageManager = require('../Repositories')
 
 async function getUserCart(uid) {
     try {
+
         const user = await User.getUserById(uid)
         return user ? user.cart : null
     } catch (error) {
@@ -14,11 +16,24 @@ async function updateUserCart(uid, cid) {
     try {
         await User.updateUserCart(uid, cid)
     } catch (error) {
+
         throw new Error('Error al actualizar el carrito del usuario')
+    }
+}
+
+async function createUser(newUserDto) {
+    try {
+        const createdUser = await User.createUser(newUserDto);
+        messageManager.sendMessage(createdUser)
+        return createdUser;
+    } catch (error) {
+        console.error('Error al crear un usuario:', error);
+        throw new Error('Error al crear un usuario');
     }
 }
 
 module.exports = {
     getUserCart,
+    createUser,
     updateUserCart
 }
