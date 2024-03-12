@@ -5,6 +5,8 @@ const GithubStrategy = require ('passport-github2')
 const Users = require('../DAO/models/user.model')
 const { createHash, useValidPassword } = require('../utils/cryp-password.util')
 const { ghClientId, ghClientSecret } = require('./server.config')
+const UserService = require ('../services/user.service')
+const Users = require('../DAO/models/user.model')
 
 const LocalStrategy = local.Strategy
 
@@ -83,9 +85,14 @@ const initializePassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        const user = Users.findById(id)
-        done(null, user)
+        try {
+            const user = await Users.findById(id)
+            done(null, user)
+        } catch (error) {
+            done(error)
+        }
     } )
+
     
 }
 

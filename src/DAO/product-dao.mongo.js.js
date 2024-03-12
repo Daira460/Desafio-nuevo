@@ -1,22 +1,22 @@
+const NewProductDto = require('../DTO/new-product.dto.js');
 const Products = require('./models/products.model')
 
+class ProductDao {
 
-class ProductManagerDb {
-      async getProductByID (id) {
-        try {
-          const findID = await Products.findOne({ _id: id})
-          if (findID) return findID
-        } catch (error) {
-            console.log ('Not Found')
-          } 
-      }
-
+    async getProductByID(id) {
+      try {
+          return await Products.findOne({ _id: id, status: true })
+      } catch (error) {
+          console.log('Error al obtener el producto por ID:', error.message)
+          throw error;
+      } 
+  }
     async addProduct(product) {
       try {
-          const { title, description, price, thumbnail, code, stock, status, category } = product
+          const { title, description, price, thumbnail, code, stock, category } = product
           if (!title || !description || !price || !code || !stock || !category) {
-            console.error ("Todos los campos son obligatorios. Producto no agregado.")
-            return { success: false, message: "Todos los campos son obligatorios. Producto no agregado." }
+            console.error ("Todos los campos son obligatorios. El producto no fue agregado.")
+            return { success: false, message: "Todos los campos son obligatorios. El producto no fue agregado." }
           }
 
           const codeExist = await Products.findOne({ code: code})
@@ -25,18 +25,9 @@ class ProductManagerDb {
             return { success: false, message: `El producto con code: ${code} ya existe. Por favor, seleccione otro.` }
           }
 
-          const newProduct = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-            status: status ?? true,
-            category
-          }
+          const NewProductInfo = new NewProductDto(product)
 
-          await Products.create(newProduct)
+          await Products.create(NewProductInfo)
 
           return { success: true }
 
@@ -48,8 +39,7 @@ class ProductManagerDb {
 
     async updateProduct(productUpdated) {
         try {
-          const result = await Products.findOneAndUpdate( {_id: productUpdated.id}, productUpdated )
-          console.log (result)
+          await Products.findOneAndUpdate( {_id: productUpdated.id}, productUpdated )
           if (!productUpdated.id) {
             console.error("Producto no encontrado con ID:", productUpdated.id)
             throw new Error("Producto no encontrado")
@@ -60,9 +50,8 @@ class ProductManagerDb {
           throw error
         }
       }
-
     async deleteProduct(id) {
-      try {
+      try {   
         const idExist = await Products.updateOne({ _id: id }, { $set: { status: false } })
         if (idExist) {
           console.log("Producto borrado correctamente")}
@@ -73,5 +62,7 @@ class ProductManagerDb {
     }
   }
 
-module.exports = ProductManagerDb
+module.exports = ProductDao
+
+
 

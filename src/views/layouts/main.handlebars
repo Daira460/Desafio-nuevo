@@ -18,18 +18,23 @@
               <span class="navbar-toggler-icon "></span>
             </button>
             <div class="collapse navbar-collapse gap-2" id="navbarNavAltMarkup">
-              <div class="navbar-nav ms-auto gap-2 fs-5">
-                <a class="nav-link link-light text-center animacion-menu" href='/login'>Ingresa</a>
-                <a class="nav-link link-light text-center animacion-menu" href='/profile'>Perfil</a>
-                <a class="nav-link link-light text-center animacion-menu" href='/api/products'>Productos</a>
-                
+              <div class="navbar-nav ms-auto gap-2 fs-5"> 
+                  <a class="nav-link link-light text-center animacion-menu" href='/api/products'>Productos</a>  
+                  {{#unless user.first_name }}
+                  <a class="nav-link link-light text-center animacion-menu" href='/login'>Ingresa</a>
+                  {{/unless}}
+                  {{#if user.first_name }}
+                  <a class="nav-link link-light text-center animacion-menu" href='/profile'>Perfil</a>
+                  {{/if}}
               </div>
-              <a class='carrito text-center' href='/api/carts/65a6128de87830ac5b33bf96'>             
-                <div class='contenedorCarrito'>
-                    <img class="carrito" src="/img/cart.svg"alt="imagen del carrito de compra"/>
-                    <span class='contadorCarrito'></span>
-                </div>
-              </a>
+              {{#if user.first_name }}
+                <a class='carrito text-center' id="cart">  
+                  <div class='contenedorCarrito'>
+                      <img class="carrito" src="/img/cart.svg"alt="imagen del carrito de compra"/>
+                      <span class='contadorCarrito'></span>
+                  </div>
+                </a>
+              {{/if}}
             </div>
           </div>
         </nav>
@@ -41,3 +46,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
+
+
+<script src="/js/cart.js"></script>

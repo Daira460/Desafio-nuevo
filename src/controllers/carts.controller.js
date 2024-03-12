@@ -1,17 +1,16 @@
 const { Router } = require('express')
 const router = Router()
-const CartManager = require ('../DAO/cartManagerDb')
-const cartManager = new CartManager()
-const ProductManager = require ('../DAO/productManagerDb')
-const productManager = new ProductManager()
+const ProductsService = require ('../services/products.service.js')
+const CartService = require ('../services/cart.service.js')
+const calculateSubtotalAndTotal = require('../utils/calculoTotales-Cart.util.js')
 
-// carrito
+//carrito
 router.post('/', async (req, res) => {
     try {
-        await cartManager.addCart()
-        res.status(201).json ({message: 'Carrito creado correctamente'})
+        const result = await CartService.addCart() 
+        res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
     } catch (error) {
-        console.error ('Error al cargar productos:', error.message)
+        console.error('Error al cargar productos:', error.message)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -19,13 +18,17 @@ router.post('/', async (req, res) => {
 router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
-        const filterById =  await cartManager.getCartByID(cid)
+        const { user } = req.session
+
+        const filterById =  await CartService.getCartByID(cid)
         if (!filterById) {
             return res.status(404).json({ error: 'El carrito con el ID buscado no existe.'})
         } else {
-            const subtotal = filterById.products.map(product => product.quantity * product.product.price)
-            const total = subtotal.reduce((acc, subtotal) => acc + subtotal, 0)
-            res.render ('cart', { 
+
+            const { subtotal, total } = calculateSubtotalAndTotal(filterById.products)
+              res.render ('cart', { 
+                user,
+                subtotal,
                 filterById,
                 total,
                 style: 'style.css',})
@@ -39,13 +42,14 @@ router.get('/:cid', async (req, res) => {
 router.post('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
-        const product = await productManager.getProductByID(pid)
+        const product = await ProductsService.getProductByID(pid)
 
         if (!product) {
             return res.status(404).json({ error: 'El producto con el ID proporcionado no existe.' })
         }
-        const result = await cartManager.addProductInCart(cid, pid)
+        const result = await CartService.addProductInCart(cid, pid)
         if (result.success) {
+            req.session.user.cart = cid
             res.status(201).json({ message: result.message })
         } else {
             res.status(500).json({ error: result.message })
@@ -55,12 +59,13 @@ router.post('/:cid/products/:pid', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
+
 router.put('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
         const { products } = req.body
 
-        const result = await cartManager.updateCart(cid, products)
+        const result = await CartService.updateCart(cid, products)
 
         if (result.success) {
             res.status(201).json({ message: result.message })
@@ -72,12 +77,13 @@ router.put('/:cid', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
+
 router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
 
-        const result = await cartManager.updateProductQuantity(cid, pid, quantity)
+        const result = await CartService.updateProductQuantity(cid, pid, quantity)
 
         if (result.success) {
             res.status(200).json({ message: result.message })
@@ -90,10 +96,11 @@ router.put('/:cid/products/:pid', async (req, res) => {
         }
 })
 
+
 router.delete('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
-        const result = await cartManager.deleteProductInCart(cid, pid)
+        const result = await CartService.deleteProductInCart(cid, pid)
 
         if (result.success) {
             res.status(201).json({ message: result.message })
@@ -105,10 +112,11 @@ router.delete('/:cid/products/:pid', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
+
 router.delete('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
-        const result = await cartManager.deleteProductsInCart(cid)
+        const result = await CartService.deleteProductsInCart(cid)
 
         if (result.success) {
             res.status(201).json({ message: result.message })
@@ -121,5 +129,7 @@ router.delete('/:cid', async (req, res) => {
     }
 })
 
+
 module.exports = router
+ 
  

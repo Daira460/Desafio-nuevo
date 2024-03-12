@@ -1,25 +1,25 @@
-const Carts = require('./models/carts.model')
-const ProductManager = require ('../DAO/productManagerDb')
-const productManager = new ProductManager()
+const Carts = require('./models/carts.model.js')
+const ProductsService = require ('../services/products.service.js')
 const mongoose = require('mongoose')
 
 
-class CartManager {
+class CartDao {
 
     async addCart() {
         try {
             const newCart = {
-              products : []
-            }
-            await Carts.create(newCart)
-            return { success: true, message: 'Carrito creado correctamente' }
-   
+                products: []
+            };
+            const createdCart = await Carts.create(newCart);
+            const cartId = createdCart._id;
+            console.log ('El cart id es:', cartId)
+    
+            return { success: true, message: 'Carrito creado correctamente', cid: cartId };
         } catch (error) {
-            console.error('Error al crear el carrito:', error.message)
-            return { success: false, message: 'Error interno al procesar la solicitud.' }
+            console.error('Error al crear el carrito:', error.message);
+            return { success: false, message: 'Error interno al procesar la solicitud.' };
         }
-      }
-
+    }
     async getCartByID (id) {
         try {
           const findCart = await Carts.findOne({ _id: id}).populate('products.product')
@@ -29,48 +29,41 @@ class CartManager {
           } 
       }
 
-    
-async addProductInCart(cid, pid) {
-    try {
-        const cart = await Carts.findById(cid)
+    async addProductInCart(cid, pid) {
+        try {
+            const cart = await Carts.findById(cid)
+            if (cart) {
+                const product = await ProductsService.getProductByID(pid)
+                if (product) {
+                    const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid.toString())
+                    if (productIndex !== -1) {
+                        cart.products[productIndex].quantity++
+                    } else {
+                        cart.products.push({ product: new mongoose.Types.ObjectId(pid), quantity: 1 })
+                    }
 
-        if (cart) {
-            const product = await productManager.getProductByID(pid)
-
-            if (product) {
-                const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid.toString())
-
-                if (productIndex !== -1) {
-                    cart.products[productIndex].quantity++
+                    await cart.save()
+                    console.log('Producto agregado al carrito con éxito')
+                    return { success: true, message: 'Producto agregado correctamente al carrito' }
                 } else {
-                    cart.products.push({ product: new mongoose.Types.ObjectId(pid), quantity: 1 })
+                    console.log('El producto no existe en la base de datos')
+                    return { success: false, message: 'El producto no existe en la lista general de productos.' }
                 }
-
-                await cart.save()
-                console.log('Producto agregado al carrito con éxito')
-                return { success: true, message: 'Producto agregado correctamente al carrito' }
             } else {
-                console.log('El producto no existe en la base de datos')
-                return { success: false, message: 'El producto no existe en la lista general de productos.' }
+                console.log('El carrito no existe en la base de datos')
+                return { success: false, message: 'carrito no encontrado.' }
             }
-        } else {
-            console.log('El carrito no existe en la base de datos')
-            return { success: false, message: 'carrito no encontrado.' }
+        } catch (error) {
+            console.error('Error al agregar el producto al carrito:', error)
+            return { success: false, message: 'internal server error' }
         }
-    } catch (error) {
-        console.error('Error al agregar el producto al carrito:', error)
-        return { success: false, message: 'internal server error' }
     }
-  }
-
   async  updateCart(cid, updatedProducts) {
     try {
         const cart = await Carts.findById(cid)
-
         if (cart) {
             updatedProducts.forEach(updatedProduct => {
                 const existingProduct = cart.products.find(product => product.product.equals(updatedProduct.productId))
-
                 if (existingProduct) {
                     existingProduct.quantity = updatedProduct.quantity
                 }
@@ -78,8 +71,8 @@ async addProductInCart(cid, pid) {
 
             await cart.save()
             
-            console.log('Productos actualizados correctamente en el carrito')
-            return { success: true, message: 'Productos actualizados correctamente en el carrito' }
+            console.log('Productos actualizados en el carrito')
+            return { success: true, message: 'Productos actualizados en el carrito' }
         } else {
             console.log('El carrito no existe en la base de datos')
             return { success: false, message: 'Carrito no encontrado.' }
@@ -90,7 +83,6 @@ async addProductInCart(cid, pid) {
 
     }
   }
-
   async updateProductQuantity(cid, pid, quantity) {
     try {
         const cart = await Carts.findById(cid)
@@ -100,33 +92,32 @@ async addProductInCart(cid, pid) {
 
             if (productIndex !== -1) {
                 cart.products[productIndex].quantity = quantity
-
                 await cart.save()
-                console.log('Cantidad de producto actualizada con éxito')
-                return { success: true, message: 'Cantidad de producto actualizada correctamente' }
+                console.log('Cantidad de producto esta actualizada con éxito')
+                return { success: true, message: 'Cantidad de producto esta actualizada correctamente' }
             } else {
-                console.log('El producto no está en el carrito')
-                return { success: false, message: 'El producto no está en el carrito.' }
+                console.log('El producto no se encuentra en el carrito')
+                return { success: false, message: 'El producto no se encuentra en el carrito.' }
             }
         } else {
             console.log('El carrito no existe en la base de datos')
             return { success: false, message: 'Carrito no encontrado.' }
         }
     } catch (error) {
-        console.error('Error al actualizar la cantidad del producto:', error)
+        console.error('Error al actualizar la cantidad de los productos:', error)
         return { success: false, message: 'Internal server error' }
     }
 }
-
     async deleteProductInCart(cid, pid) {
         try {
             const cart = await Carts.findById(cid)
-
-            if (cart) {
+         if (cart) {
                 const productIndex = cart.products.findIndex(prod => prod.product.toString() === pid.toString())
 
                 if (productIndex !== -1) {
+
                     cart.products.splice(productIndex, 1)
+
                     await cart.save()
                     console.log('Producto eliminado del carrito con éxito')
                     return { success: true, message: 'Producto eliminado correctamente del carrito' }
@@ -151,6 +142,7 @@ async addProductInCart(cid, pid) {
         if (cart) {
 
             cart.products = []
+
             await cart.save()
             console.log('Productos eliminados del carrito con éxito')
             return { success: true, message: 'Productos eliminados correctamente del carrito' }
@@ -164,6 +156,5 @@ async addProductInCart(cid, pid) {
     }
   }
 }
-
-module.exports = CartManager
+module.exports = CartDao
 

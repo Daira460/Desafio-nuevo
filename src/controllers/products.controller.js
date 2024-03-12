@@ -1,34 +1,23 @@
 const { Router } = require('express')
 const router = Router()
-const ProductManager = require ('../DAO/productManagerDb')
-const productManager = new ProductManager()
-const Products = require('../DAO/models/products.model')
+const ProductsService = require ('../services/products.service.js')
+const { getProducts } = require('../utils/products.util.js')
+
 
 router.get('/', async (req, res) => {
 try {
- 
- const { limit , page = 1, sort, category, stock} = req.query
+    const { limit, page, sort, category, stock } = req.query
 
-const limitValue = limit ? parseInt(limit) : 10
+    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages } = await getProducts({ limit, page, sort, category, stock })
 
- const { docs, hasPrevPage, hasNextPage, nextPage, prevPage,totalPages} = await Products.paginate (
-        {$and:[ 
-            { status: true},
-            { category: category ? { $eq: category } : { $exists: true } },
-            { stock: stock ? { $eq: stock } : { $exists: true }} 
-        ]
-        }, 
-        {   page,
-            limit:limitValue,
-            lean:true,
-            sort: sort === 'desc' ? { price: -1 } : sort === 'asc' ? { price: 1 } : undefined}
-    )
-
- const products = docs
- const { user } = req.session
+    if (totalPages && parseInt(page) > totalPages) {
+        return res.redirect(`/api/products?page=${totalPages}`)
+    }
+    const products = docs
+    const { user } = req.session
 
 if (totalPages && parseInt(page) > totalPages) {
-return res.redirect(`/api/products?page=${totalPages}`);
+return res.redirect(`/api/products?page=${totalPages}`)
 }
 
  res.render ('home', { 
@@ -47,16 +36,19 @@ return res.redirect(`/api/products?page=${totalPages}`);
 }
 })
 
-
 router.get('/:pid', async (req, res) => {
 try {
     const { pid } = req.params
-    const filterById =  await productManager.getProductByID(pid)
-    if (!filterById) {
+    const { user } = req.session
+const productFilter =  await ProductsService.getProductByID(pid)
+
+    if (!productFilter) {
         return res.status(404).json({ error: 'El producto con el id buscado no existe.'})
-    } else {
-        res.json ({filterById})
-    }
+    }   res.render ('productFilter', { 
+        user,
+        productFilter,
+        pid,
+         style: 'style.css',}) 
 } catch (error) {
     console.error ('Error al obtener los products:', error.message)
     res.status(500).json({ error: 'Internal Server Error' })
@@ -66,12 +58,10 @@ try {
 router.post("/", async (req, res) => {
 try {
   const { code, description, price, stock, thumbnail, title, category } = req.body
-  const result = await productManager.addProduct({code,description,price,stock,thumbnail,title,category})
+  const result = await ProductsService.addProduct({code,description,price,stock,thumbnail,title,category})
 
   if (result.success) {
     res.status(201).json({ message: "Producto creado correctamente" })
-    const productData = {code,description,price,stock,thumbnail,title,category}
-    req.app.locals.io.emit("newProduct", { data: productData })
   } else {
     res.status(400).json({ error: result.message })
   }
@@ -89,17 +79,18 @@ try {
     if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
         return res.status(404).json ({error: "Todos los campos son obligatorios. Producto no agregado."})
       }
-    await productManager.updateProduct({ ...product, id: pid })
+    await ProductsService.updateProduct({ ...product, id: pid })
     res.json({ message: 'Producto Actualizado correctamente' })
 } catch (error) {
     res.status(500).json({ error: 'Error al actualizar el producto.' })
 }
 })
 
+
 router.delete ('/:pid', async (req, res) => {
 try {
     const { pid } = req.params
-    const result = await productManager.deleteProduct(pid)
+    const result = await ProductsService.deleteProduct(pid)
     if (result === false) {
         return res.status(404).json({ error: 'El producto con el id buscado no existe.'})
     } else {
@@ -109,6 +100,7 @@ try {
     res.status(500).json({ error: 'Error al borrar un producto.' })
 }
 })
+
 
 
 module.exports = router 
