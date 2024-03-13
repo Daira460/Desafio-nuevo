@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const cartButton = document.getElementById('cart')
+    if (cartButton) {
         cartButton.addEventListener('click', async () => {
             try {
                 const response = await fetch(`/api/users/user-cart`, {
@@ -11,12 +12,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     window.location.href = `/login`
                     return
                 }
-                    window.location.href = `/api/carts/${cid}`
+                window.location.href = `/api/carts/${cid}`
             } catch (error) {
                 console.error(error)
             }
         })
-    
+    }
+
 
     const cancelarCompraButton = document.querySelector('.cancelarCompra')
     if (cancelarCompraButton) {
@@ -36,16 +38,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
     }
 
+    
     document.querySelectorAll('.iconoBasura').forEach(function(button) {
         button.addEventListener('click', function() {
             const cid = this.dataset.cid
             const pid = this.dataset.pid
 
-    
             fetch(`/api/carts/${cid}/products/${pid}`, {
                 method: 'DELETE',
             })
-            
             .then(response => response.json())
             .then(data => {
                 console.log(data)

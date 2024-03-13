@@ -4,7 +4,6 @@ function submitForm() {
         password: document.getElementById('password').value,
     }
 
-
     fetch('/api/auth', {
         method: 'POST',
         headers: {
@@ -20,9 +19,9 @@ function submitForm() {
         }
     })
     .then(responseData => {
-        
+
         if (responseData.status === 'success') { 
-            window.location.href = '/api/products'
+            window.location.href = '/api/products' 
         } 
     })
     .catch(error => {
@@ -36,6 +35,7 @@ function submitForm() {
 }
 
 const registrate = document.getElementById('Registrate')
+
 
 registrate.addEventListener('click', () => {
     window.location.href = '/signup'

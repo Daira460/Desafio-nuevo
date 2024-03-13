@@ -3,6 +3,7 @@ function submitForm() {
         email: document.getElementById('usuario').value.toUpperCase(),
         password: document.getElementById('password').value,
     }
+
     fetch('/api/auth/forgotPassword', {
         method: 'POST',
         headers: {
@@ -27,7 +28,6 @@ function submitForm() {
 }
 
 const registrate = document.getElementById('Registrate')
-
 
 registrate.addEventListener('click', () => {
     window.location.href = '/signup'
