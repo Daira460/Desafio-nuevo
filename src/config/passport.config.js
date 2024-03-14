@@ -4,7 +4,7 @@ const GithubStrategy = require ('passport-github2')
 const { useValidPassword } = require('../utils/cryp-password.util')
 const { ghClientId, ghClientSecret } = require('../config/server.config')
 const NewUserDto = require('../DTO/new-user.dto')
-const UserService = require ('../services/user.service')
+const UserService = require('../services/user.service');
 const Users = require('../DAO/models/user.model')
 
 
@@ -14,7 +14,7 @@ const initializePassport = () => {
     passport.use(
         'register',
          new LocalStrategy(
-       {passReqToCallback: true, usernameField: 'email'},
+       {passReqToCallback: true, sernameField: 'email'},
        async (req, username, password, done) => {
         try {
         const user = await Users.findOne ({email: username})

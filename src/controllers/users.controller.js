@@ -1,7 +1,10 @@
 const { Router } = require('express')
-const Users = require('../DAO/models/user.model')
 const router = Router()
 const passport = require ('passport')
+const UserService = require ('../services/user.service')
+
+
+
 router.get ('/user-cart', async (req, res) => {
     try {
         const cid = req.session.cart
@@ -19,10 +22,9 @@ router.get ('/user-cart', async (req, res) => {
     }
 })
 
-
 router.post ('/', passport.authenticate('register', {failureRedirect: '/api/users/fail-Register'}),  async (req, res) => {
     try {
-        res.status(201).json ({status: 'success', messae: 'Usuario' })
+        res.status(201).json ({status: 'success', message: 'Usuario' })
      } catch (error) {
         console.error ('Error:', error.message)
         res.status(500).json({ error: 'Internal Server Error' })
@@ -30,13 +32,15 @@ router.post ('/', passport.authenticate('register', {failureRedirect: '/api/user
 })
 
 router.get ('/fail-Register', (req, res) => {
-    console.log ('Fallo el registro')
+    console.log ('Fallo registro')
     res.status(400).json({status: 'error',  error: 'bad Request' })
 })
+
 router.put('/', async (req, res) => {
     try {
         const uid = req.user._id
         const { cart: cid } = req.body
+ 
         await UserService.updateUserCart(uid, cid)
         res.status(200).json({ status: 'success', message: 'User cart updated successfully' })
     } catch (error) {
@@ -44,6 +48,5 @@ router.put('/', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
-
 
 module.exports = router
