@@ -1,11 +1,10 @@
 const socket = io()
-
 const chatBox = document.getElementById('chatBox')
 const messageLogs = document.getElementById('messageLogs')
 const getUsername = async () => {
     try {
         const username = await Swal.fire({
-            title: 'Bienvenido al Chat',
+            title: 'Bienvenido/a al Chat',
             text: 'Ingresa tu nombre de usuario para identificarte',
             input: 'text',
             showClass: {

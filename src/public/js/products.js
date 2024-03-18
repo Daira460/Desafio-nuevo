@@ -14,9 +14,6 @@ document.querySelectorAll('.botonAgregarCarrito').forEach(function(button) {
       console.error (error)
     }
   }
-  
-    console.log('PID:', pid)
-    console.log("CID:", cid) 
     
     if (!cid) {
 

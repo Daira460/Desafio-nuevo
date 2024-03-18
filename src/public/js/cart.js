@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', async () => {
     const cartButton = document.getElementById('cart')
     if (cartButton) {
@@ -19,31 +20,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
     }
 
-
     const cancelarCompraButton = document.querySelector('.cancelarCompra')
     if (cancelarCompraButton) {
         cancelarCompraButton.addEventListener('click', function() {
-            const cid = this.dataset.cid
-            fetch(`/api/carts/${cid}`, {
-                method: 'DELETE',
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                window.location.reload()
-            })
-            .catch(error => {
-                console.error('Error al cancelar la compra:', error)
-            })
+            try {
+                const cid = this.dataset.cid
+
+                fetch(`/api/carts/${cid}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    window.location.reload()
+                })
+            } catch (error) {
+                console.error('Error al procesar la solicitud:', error)
+            }
         })
     }
 
-    
     document.querySelectorAll('.iconoBasura').forEach(function(button) {
         button.addEventListener('click', function() {
             const cid = this.dataset.cid
             const pid = this.dataset.pid
 
+            
             fetch(`/api/carts/${cid}/products/${pid}`, {
                 method: 'DELETE',
             })
@@ -57,4 +59,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
         })
     })
+
+    const finalizarCompra = document.getElementById('finalizarCompra')
+    if (finalizarCompra) {
+        finalizarCompra.addEventListener('click', async function() {
+            const cid = this.dataset.cid
+            try {    
+                const response = await fetch(`/api/carts/${cid}/purchase`, {
+                    method: 'POST',
+                })
+    
+                if (!response.ok) {
+                    throw new Error('La solicitud no fue exitosa')
+                }
+                const data = await response.json()
+                const total = data.total
+                const orderNumber = data.orderNumber
+              
+                window.location.href = `/api/carts/${cid}/purchase?total=${total}&orderNumber=${orderNumber}`
+            } catch (error) {
+                console.error('Error al finalizar la compra:', error)
+            }
+        })
+    }
+    
 })
+

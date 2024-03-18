@@ -1,31 +1,24 @@
 const { Router } = require('express')
 const router = Router()
-const ProductsService = require ('../services/products.service.js')
-const authorization = require('../middlewares/authorization-middleware.js')
 const CartService = require ('../services/cart.service.js')
+const ProductsService = require ('../services/products.service.js')
 const calculateSubtotalAndTotal = require('../utils/calculoTotales-Cart.util.js')
+const authorization = require('../middlewares/authorization-middleware.js')
+const NewPurchaseDTO = require('../DTO/new-purchase.dto.js')
+const separateStocks  = require('../utils/separateStocks.util')
 
-//carrito
-router.post('/', async (req, res) => {
-    try {
-        const result = await CartService.addCart() 
-        res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
-    } catch (error) {
-        console.error('Error al cargar productos:', error.message)
-        res.status(500).json({ error: 'Internal Server Error' })
-    }
-})
 
 router.get('/:cid', async (req, res) => {
     try {
+       
         const { cid } = req.params
         const { user } = req.session
-
+        
         const filterById =  await CartService.getCartByID(cid)
         if (!filterById) {
             return res.status(404).json({ error: 'El carrito con el ID buscado no existe.'})
         } else {
-
+           
             const { subtotal, total } = calculateSubtotalAndTotal(filterById.products)
               res.render ('cart', { 
                 user,
@@ -40,7 +33,40 @@ router.get('/:cid', async (req, res) => {
     }
 })
 
-router.post('/:cid/products/:pid', async (req, res) => {
+
+router.get('/:cid/purchase', async (req, res) => {
+    try {
+        const { cid } = req.params
+        const { user } = req.session
+        const { total, orderNumber } = req.query
+        const filterById =  await CartService.getCartByID(cid)
+        if (!filterById || !user) {
+            return res.status(404).json({ error: 'Error a ver la orden de compra.'})
+        } 
+        res.render ('ticket', { 
+            user,
+            total,
+            orderNumber,
+            style: 'style.css',})
+    } catch (error) {
+        console.error ('Error al obtener el ticket:', error.message)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+//carrito
+router.post('/', async (req, res) => {
+    try {
+        const result = await CartService.addCart() // Capturar el resultado de addCart()
+        res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
+    } catch (error) {
+        console.error('Error al cargar productos:', error.message)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+
+router.post('/:cid/products/:pid', authorization('user'), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const product = await ProductsService.getProductByID(pid)
@@ -50,6 +76,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
         }
         const result = await CartService.addProductInCart(cid, pid)
         if (result.success) {
+            
             req.session.user.cart = cid
             res.status(201).json({ message: result.message })
         } else {
@@ -61,25 +88,41 @@ router.post('/:cid/products/:pid', async (req, res) => {
     }
 })
 
-router.put('/:cid', async (req, res) => {
+
+router.post('/:cid/purchase', async (req, res) => {
     try {
         const { cid } = req.params
-        const { products } = req.body
-
-        const result = await CartService.updateCart(cid, products)
-
-        if (result.success) {
-            res.status(201).json({ message: result.message })
-        } else {
-            res.status(500).json({ error: result.message })
+        const { user } = req.session
+        const filterById =  await CartService.getCartByID(cid)
+        if (!filterById) {
+            return res.status(404).json({ error: 'El carrito con el ID buscado no existe.'})
+        }   
+       
+        const { productsInStock, productsOutOfStock } = separateStocks(filterById.products)
+    
+        await ProductsService.updateStock(productsInStock)
+  
+        const updatedCart = await CartService.updateCart(cid, productsOutOfStock)
+        if (!updatedCart.success) {
+            return res.status(500).json({ error: updatedCart.message })
         }
+        
+        const { total }  = calculateSubtotalAndTotal(productsInStock)
+        const NewTicketInfo = new NewPurchaseDTO (total, user)
+        const order = await CartService.createPurchase(NewTicketInfo) 
+        const orderNumber = order.createdOrder.code
+        res.status(201).json({ 
+            message: 'ticket creado correctamente',
+            total: total,
+            orderNumber: orderNumber,
+        })    
     } catch (error) {
-        console.error('Error al actualizar los productos del carrito:', error.message)
+        console.error('Error al crear una orden:', error.message)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
 
-router.put('/:cid/products/:pid', async (req, res) => {
+router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
@@ -98,7 +141,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
 })
 
 
-router.delete('/:cid/products/:pid', async (req, res) => {
+router.delete('/:cid/products/:pid', authorization('user'), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const result = await CartService.deleteProductInCart(cid, pid)
@@ -114,7 +157,8 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     }
 })
 
-router.delete('/:cid', async (req, res) => {
+
+router.delete('/:cid', authorization('user'), async (req, res) => {
     try {
         const { cid } = req.params
         const result = await CartService.deleteProductsInCart(cid)
@@ -130,7 +174,5 @@ router.delete('/:cid', async (req, res) => {
     }
 })
 
-
 module.exports = router
- 
  

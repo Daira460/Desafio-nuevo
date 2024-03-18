@@ -36,6 +36,15 @@ class ProductRepository {
             throw error
         }
     }
+
+    async updateStock (productsInStock) {
+        try {
+            await this.productDao.updateStock(productsInStock) 
+        } catch (error) {
+            throw error
+          }  
+       }
 }
+
 
 module.exports = ProductRepository

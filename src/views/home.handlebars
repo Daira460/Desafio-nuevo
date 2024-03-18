@@ -1,6 +1,11 @@
-<h1> Productos</h1>
+{{#if user.first_name }}
+    <h1>Bienvenido {{user.first_name}}</h1>
+{{else}}
 
-<h2>Bienvenido/a {{user.first_name}}</h2>
+
+    <h1>Bienvenido/a</h1>
+    <p class="parrafoLoguearse">Por favor iniciar sesión para realizar una compra en nuestra web.</p>
+{{/if}}
 
 <main>
     <section>
@@ -17,9 +22,11 @@
                         Precio:${{price}} Cantidad:{{stock}}
                     </p>
                 </div>
-                <button class="botonAgregarCarrito btn btn2" data-pid="{{_id}}">
-                    Agregar al Carrito
-                </button> 
+                {{#isEqual ../user.role 'user'}}
+                    <button class="botonAgregarCarrito btn btn2" data-pid="{{_id}}" data-cid="{{../user.cart}}">
+                        Agregar al Carrito
+                    </button> 
+                {{/isEqual}}
             </div>
         {{/each}}
         </div>
@@ -32,6 +39,11 @@
             {{/if}}
         </div>
     </section>
+<footer>
+
+    <p> Created by Carcamo Daira | todos los derechos reservados</p>
+    
+</footer>
 </main>
 
 

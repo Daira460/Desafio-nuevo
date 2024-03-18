@@ -8,6 +8,7 @@ class UserDao {
             throw new Error('Error al obtener el usuario de la base de datos')
         }
     }
+  
     async updateUserCart(uid, cid) {
         try {
             await Users.updateOne({ _id: uid }, { cart: cid }).exec()
@@ -15,6 +16,7 @@ class UserDao {
             throw new Error('Error al actualizar el carrito del usuario en la base de datos')
         }
     }
+ 
     async createUser(newUserDto){
         try {
             const createdUser = await Users.create(newUserDto)
@@ -24,5 +26,6 @@ class UserDao {
         }
     }
 }
+
 
 module.exports = UserDao

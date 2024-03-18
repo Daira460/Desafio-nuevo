@@ -56,7 +56,7 @@ function submitForm() {
         console.error('Error:', error);
         Swal.fire({
             icon: "error",
-            title: "Oops...",
+            title: "Ops...",
             text: "Error, el correo ya se encuentra registrado",
           });
     });

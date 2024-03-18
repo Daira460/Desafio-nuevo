@@ -14,7 +14,7 @@ const initializePassport = () => {
     passport.use(
         'register',
          new LocalStrategy(
-       {passReqToCallback: true, sernameField: 'email'},
+       {passReqToCallback: true, usernameField: 'email'},
        async (req, username, password, done) => {
         try {
         const user = await Users.findOne ({email: username})

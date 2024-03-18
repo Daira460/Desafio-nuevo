@@ -42,7 +42,7 @@ router.put('/', async (req, res) => {
         const { cart: cid } = req.body
  
         await UserService.updateUserCart(uid, cid)
-        res.status(200).json({ status: 'success', message: 'User cart updated successfully' })
+        res.status(200).json({ status: 'success', message: 'Carrito del usuario actualizado exitosamente' })
     } catch (error) {
         console.error('Error al actualizar el carrito del usuario:', error.message)
         res.status(500).json({ error: 'Internal Server Error' })

@@ -19,7 +19,7 @@ function submitForm() {
             console.log("Error al restaurar la clave")
             Swal.fire({
                 icon: "error",
-                title: "Oops...",
+                title: "Ops...",
                 text: "Email incorrecto",
               });
         }

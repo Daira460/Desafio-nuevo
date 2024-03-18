@@ -1,10 +1,10 @@
 const authorization = role => {
     return (req,res,next) => {
         if (!req.user)
-            return res.status(401).json ({status:'error', error: 'Unauthorized'})
+            return res.status(401).json ({status:'error', error: 'Sin autorización'})
 
         if(req.user.role != role)
-            return res.status(401).json ({status:'error', error: 'forbiden'})
+            return res.status(401).json ({status:'error', error: 'Prohibido'})
         next()
     }
 }

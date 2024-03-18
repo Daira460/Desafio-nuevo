@@ -14,11 +14,13 @@ async function getProducts({ limit = 10, page = 1, sort, category, stock }) {
 
 
     const options = {
+
         page,
         limit: limitValue,
         lean: true,
         sort: sort === 'desc' ? { price: -1 } : sort === 'asc' ? { price: 1 } : undefined
     }
+    
 
     return await Products.paginate(query, options)
 }

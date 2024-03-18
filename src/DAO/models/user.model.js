@@ -19,13 +19,12 @@ const userSchema = new mongoose.Schema({
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'cart',
-        unique: true,
         default: null,
     },
     githubId: Number,
     githubUsername: String,
-
 })
+
 const Users = mongoose.model (userColletion, userSchema)
 
 module.exports = Users

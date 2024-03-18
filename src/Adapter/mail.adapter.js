@@ -15,7 +15,7 @@ class MailAdapter {
             attachments: [
                 {
                     filename: 'logo.png',
-                    path: process.cwd() + '/src/public/img/logo.png',
+                    path: process.cwd() + '/src/public/img/Captura de pantalla 2024-03-13 150350.png',
                     cid: 'logo',
                 },
             ],
