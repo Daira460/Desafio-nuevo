@@ -1,3 +1,4 @@
+
 document.querySelectorAll('.botonAgregarCarrito').forEach(function(button) {
   button.addEventListener ('click', async function() {
     let pid = this.dataset.pid
@@ -17,7 +18,6 @@ document.querySelectorAll('.botonAgregarCarrito').forEach(function(button) {
     
     if (!cid) {
 
-
       fetch(`/api/carts`, {
         method: 'POST',
       })
@@ -25,6 +25,7 @@ document.querySelectorAll('.botonAgregarCarrito').forEach(function(button) {
       .then(data => {
         console.log(data)
         cid = data.cid 
+
         fetch(`/api/users/`, {
           method: 'PUT',
           headers: {
@@ -50,6 +51,7 @@ document.querySelectorAll('.botonAgregarCarrito').forEach(function(button) {
   })
 })
 
+
 function agregarProductoAlCarrito(cid, pid) {
   fetch(`/api/carts/${cid}/products/${pid}`, {
       method: 'POST',
@@ -61,7 +63,7 @@ function agregarProductoAlCarrito(cid, pid) {
           toast: true,
           position: 'top-end',
           showConfirmButton: false,
-          timer: 2000,
+          timer: 1000,
           timerProgressBar: true,
           didOpen: (toast) => {
               toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -69,9 +71,10 @@ function agregarProductoAlCarrito(cid, pid) {
           }
       })
 
+
       Toast.fire({
           icon: 'success',
-          title: `Producto agregado correctamente`,
+          title: `Producto agregado al carrito correctamente`,
       })
   })
   .catch(error => {

@@ -5,11 +5,11 @@ const { Server } = require("socket.io")
 const handlebars = require('express-handlebars')
 const mongoConnect = require('./src/db')
 const chats = []
-const Messages = require ('./src/DAO/models/messages.model')
+const Messages = require ('./src/DAO/models/messages.model.js')
 const session = require('express-session');
-const initializePassport = require('./src/config/passport.config')
+const initializePassport = require('./src/config/passport.config.js')
 const passport = require('passport')
-
+const errorMiddleware = require('./src/middlewares/errores-middlewares/errors')
 
 const app = express()
 
@@ -25,7 +25,6 @@ hbs.handlebars.registerHelper('multiply', function(a, b) {
   return a * b;
 });
 
-
 hbs.handlebars.registerHelper('isEqual', function(arg1, arg2, options) {
   return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
 });
@@ -38,6 +37,7 @@ app.use(session ({
   resave: true,
   saveUninitialized: true,
 }))
+
 
 app.use('/bootstrap', express.static(process.cwd() + '/node_modules/bootstrap/dist'))
 
@@ -63,7 +63,9 @@ io.on ('connection', (socket) => {
   })
   socket.on ('message', async data => {
     chats.push(data) 
+
     io.emit ('messageLogs', chats) 
+
     try {
       const NewMessage = {
         user: data.user,
@@ -82,6 +84,11 @@ app.locals.io = io
 mongoConnect()
 
 router(app)
+
+app.use(errorMiddleware)
+
+
+
 
 
 
