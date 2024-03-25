@@ -76,31 +76,31 @@ router.post('/:cid/products/:pid', authorization('user'), async (req, res, next)
         const product = await ProductsService.getProductByID(pid)
 
         if (!product) {
-            ErrorPersonalizado.createError({
-                name: TiposErrores.PRODUCT_NOT_FOUND,
-                cause: 'El producto con el ID proporcionado no existe.',
-                message: 'El producto con el ID proporcionado no existe.',
-                code: CodigosErrores.NOT_FOUND,
+            throw new ErrorPersonalizado({
+                nombre: TiposErrores.PRODUCTO_NO_ENCONTRADO,
+                causa: 'El producto con el ID proporcionado no existe.',
+                mensaje: 'El producto con el ID proporcionado no existe.',
+                codigo: CodigosErrores.NO_ENCONTRADO,
             })
         }
 
         const result = await CartService.addProductInCart(cid, pid)
         if (result.success) {
-
             req.session.user.cart = cid
-            res.status(201).json({ message: result.message })
+            res.status(201).json({ mensaje: result.message })
         } else {
-            ErrorPersonalizado.createError({
-                name: TiposErrores.INTERNAL_SERVER_ERROR,
-                cause: 'Error al agregar el producto al carrito.',
-                message: result.message,
-                code: CodigosErrores.INTERNAL_SERVER_ERROR,
+            throw new ErrorPersonalizado({
+                nombre: TiposErrores.ERROR_SERVIDOR_INTERNO,
+                causa: 'Error al agregar el producto al carrito.',
+                mensaje: result.message,
+                codigo: CodigosErrores.ERROR_SERVIDOR_INTERNO,
             })
         }
     } catch (error) {
         next(error)
     }
 })
+
 
 router.post('/:cid/purchase', async (req, res) => {
     try {
@@ -119,7 +119,7 @@ const updatedCart = await CartService.updateCart(cid, productsOutOfStock)
 if (!updatedCart.success) {
     return res.status(500).json({ error: updatedCart.message })
 }
-// Calcular el total del carrito
+
 const { total } = calculateSubtotalAndTotal(productsInStock)
 const NewTicketInfo = new NewPurchaseDTO(total, user)
 const order = await CartService.createPurchase(NewTicketInfo)

@@ -71,11 +71,11 @@ router.post("/", authorization('admin'), async (req, res, next) => {
     try {
         const { code, description, price, stock, thumbnail, title, category } = req.body;
         if (!title || !description || !code || !price || !stock || !category ) {
-            ErrorPersonalizado.createError({
-                nombre: TiposErrores.PRODUCT_CREATION_ERROR,
+            ErrorPersonalizado.crearError({
+                nombre: TiposErrores.ERROR_AL_CREAR_PRODUCTO,
                 causa: generateProductErrorDetails({ title, description, code, price, stock, category }),
                 mensaje: 'Error al crear el producto',
-                codigo: CodigosErrores.PRODUCT_CREATION_ERROR,
+                codigo: CodigosErrores.ERROR_AL_CREAR_PRODUCTO,
             });
         }
         const result = await ProductsService.addProduct({ code, description, price, stock, thumbnail, title, category });

@@ -2,7 +2,7 @@ const CodigosErrores = require('../../errores/codigos_errores')
 
 const errorMiddleware = (error, req, res, next) => {
     console.log('Error del middleware es:', error.cause)
-    switch (error.code) {
+    switch (error.codigo) { 
         case CodigosErrores.NOT_FOUND:
             res.status(CodigosErrores.NOT_FOUND).json({ status: 'error', error: error.message })
             break
@@ -34,4 +34,5 @@ const errorMiddleware = (error, req, res, next) => {
 }
 
 module.exports = errorMiddleware
+
 

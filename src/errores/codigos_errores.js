@@ -1,12 +1,12 @@
-const CodigosErrores = { 
+const CodigosErrores = {
     NO_AUTORIZADO: 401,
     NO_ENCONTRADO: 404,
     INFORMACION_USUARIO_INVALIDA: 400,
     ERROR_SERVIDOR_INTERNO: 500,
-    ERROR_CREACION_PRODUCTO: 400,
+    ERROR_CREACION_PRODUCTO: 422,
     ERROR_BASE_DATOS: 500,
+    ERROR_AL_CREAR_PRODUCTO: 422,
 };
-
 
 module.exports = CodigosErrores;
 

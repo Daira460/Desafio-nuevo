@@ -13,24 +13,23 @@ router.get('/user-cart', async (req, res, next) => {
         if (!cid) {
             if (!req.user) {
                 throw new ErrorPersonalizado({
-                    name: TiposErrores.NOT_AUTHORIZED,
-                    cause: 'No estás autenticado',
-                    message: 'No estás autenticado',
-                    code: CodigosErrores.NOT_AUTHORIZED,
+                    nombre: TiposErrores.NO_AUTORIZADO,
+                    causa: 'No estás autenticado',
+                    mensaje: 'No estás autenticado',
+                    codigo: CodigosErrores.NO_AUTORIZADO,
                 });
             }
             const uid = req.user._id;
             const userCart = await UserService.getUserCart(uid);
             if (!userCart) {
-                ErrorPersonalizado.createError({
-                    name: TiposErrores.USER_NOT_EXIST,
-                    cause: 'No se encontró el usuario en la base de datos',
-                    message: 'El usuario no existe',
-                    code: CodigosErrores.NOT_FOUND,
+                throw new ErrorPersonalizado({
+                    nombre: TiposErrores.USUARIO_NO_EXISTE,
+                    causa: 'No se encontró el usuario en la base de datos',
+                    mensaje: 'El usuario no existe',
+                    codigo: CodigosErrores.NO_ENCONTRADO,
                 });
-                return;
             }
-            res.status(200).json({ status: 'success', cid: userCart });
+            res.status(200).json({ estado: 'éxito', cid: userCart });
         }
     } catch (error) {
         next(error);

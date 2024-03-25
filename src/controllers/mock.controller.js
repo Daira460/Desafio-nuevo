@@ -8,7 +8,7 @@ const generateProducts = () => {
         title: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         price: faker.commerce.price(),
-        thumbnail: faker.helpers.arrayElement(['AC100.JPG', 'DE710.JPG', 'AC820.JPG', 'AC803.JPG']),
+        thumbnail: faker.helpers.arrayElement(),
         code: faker.string.uuid(),
         stock: faker.number.int({ max: 1000 }),
         status: true,
