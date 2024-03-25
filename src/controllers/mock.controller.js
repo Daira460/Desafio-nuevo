@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const faker = require('@faker-js/faker');
 
-const generateProduct = () => {
+const generateProducts = () => {
     return {
         _id: faker.database.mongodbObjectId(),
         title: faker.commerce.productName(),
@@ -15,13 +15,17 @@ const generateProduct = () => {
         category: faker.commerce.productAdjective(),
     };
 };
-
-router.get('/', (req, res) => {
-    const products = [];
-    for (let i = 0; i < 100; i++) {
-        products.push(generateProduct());
+router.get('/mockingproducts', (req, res) => {
+    try {
+        const products = [];
+        for (let i = 0; i < 100; i++) {
+            products.push(generateProducts());
+        }
+        res.json(products);
+    } catch (error) {
+        console.error('Error al obtener los productos:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-    res.json(products);
 });
 
 module.exports = router;

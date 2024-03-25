@@ -7,6 +7,7 @@ const ErrorPersonalizado = require('../errores/Error-Personalizado');
 const TiposErrores = require('../errores/tipos-errores');
 const generateProductErrorDetails = require('../errores/generateProductErrorDetails');
 const CodigosErrores = require('../errores/codigos_errores');
+const generateProducts = require ('../utils/products-mocks.util')
 
 router.get('/', async (req, res) => {
     try {
@@ -36,16 +37,15 @@ router.get('/', async (req, res) => {
 
 router.get('/mockingproducts', async (req, res) => {
     try {
-        const products = generateProducts();
-        res.render('home', {
+        const products = generateProducts()
+        res.render ('home', { 
             products,
-            style: 'style.css',
-        });
+             style: 'style.css',})
     } catch (error) {
-        console.error('Error al obtener los productos:', error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error ('Error al obtener los products:', error.message)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
-});
+})
 
 router.get('/:pid', async (req, res) => {
     try {
@@ -72,10 +72,10 @@ router.post("/", authorization('admin'), async (req, res, next) => {
         const { code, description, price, stock, thumbnail, title, category } = req.body;
         if (!title || !description || !code || !price || !stock || !category ) {
             ErrorPersonalizado.createError({
-                name: TiposErrores.PRODUCT_CREATION_ERROR,
-                cause: generateProductErrorDetails({ title, description, code, price, stock, category }),
-                message: 'Error al crear el producto',
-                code: CodigosErrores.PRODUCT_CREATION_ERROR,
+                nombre: TiposErrores.PRODUCT_CREATION_ERROR,
+                causa: generateProductErrorDetails({ title, description, code, price, stock, category }),
+                mensaje: 'Error al crear el producto',
+                codigo: CodigosErrores.PRODUCT_CREATION_ERROR,
             });
         }
         const result = await ProductsService.addProduct({ code, description, price, stock, thumbnail, title, category });
