@@ -13,7 +13,6 @@ const CodigosErrores = require('../errores/codigos_errores');
 
 router.get('/:cid', async (req, res) => {
     try {
-   
         const { cid } = req.params
         const { user } = req.session
 
@@ -21,7 +20,6 @@ router.get('/:cid', async (req, res) => {
         if (!filterById) {
             return res.status(404).json({ error: 'El carrito con el ID buscado no existe.' })
         } else {
-     
             const { subtotal, total } = calculateSubtotalAndTotal(filterById.products)
             res.render('cart', {
                 user,
@@ -32,7 +30,7 @@ router.get('/:cid', async (req, res) => {
             })
         }
     } catch (error) {
-        console.error('Error al obtener el carrito:', error.message)
+        console.error('Error al obtener el carrito:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -54,7 +52,7 @@ router.get('/:cid/purchase', async (req, res) => {
             style: 'style.css',
         })
     } catch (error) {
-        console.error('Error al obtener el ticket:', error.message)
+        console.error('Error al obtener el ticket:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -64,7 +62,7 @@ router.post('/', async (req, res) => {
         const result = await CartService.addCart()
         res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
     } catch (error) {
-        console.error('Error al cargar productos:', error.message)
+        console.error('Error al cargar productos:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -113,26 +111,26 @@ router.post('/:cid/purchase', async (req, res) => {
 
         const { productsInStock, productsOutOfStock } = separateStocks(filterById.products)
 
-await ProductsService.updateStock(productsInStock)
+        await ProductsService.updateStock(productsInStock)
 
-const updatedCart = await CartService.updateCart(cid, productsOutOfStock)
-if (!updatedCart.success) {
-    return res.status(500).json({ error: updatedCart.message })
-}
+        const updatedCart = await CartService.updateCart(cid, productsOutOfStock)
+        if (!updatedCart.success) {
+            return res.status(500).json({ error: updatedCart.message })
+        }
 
-const { total } = calculateSubtotalAndTotal(productsInStock)
-const NewTicketInfo = new NewPurchaseDTO(total, user)
-const order = await CartService.createPurchase(NewTicketInfo)
-const orderNumber = order.createdOrder.code
-res.status(201).json({
-    message: 'ticket creado correctamente',
-    total: total,
-    orderNumber: orderNumber,
-})
-} catch (error) {
-    console.error('Error al crear una orden:', error.message)
-    res.status(500).json({ error: 'Internal Server Error' })
-}
+        const { total } = calculateSubtotalAndTotal(productsInStock)
+        const NewTicketInfo = new NewPurchaseDTO(total, user)
+        const order = await CartService.createPurchase(NewTicketInfo)
+        const orderNumber = order.createdOrder.code
+        res.status(201).json({
+            message: 'ticket creado correctamente',
+            total: total,
+            orderNumber: orderNumber,
+        })
+    } catch (error) {
+        console.error('Error al crear una orden:', error.causa)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
 })
 
 
@@ -149,7 +147,7 @@ router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
             res.status(500).json({ error: result.message })
         }
     } catch (error) {
-        console.error('Error al actualizar la cantidad del producto:', error.message)
+        console.error('Error al actualizar la cantidad del producto:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -165,7 +163,7 @@ router.delete('/:cid/products/:pid', authorization('user'), async (req, res) => 
             res.status(500).json({ error: result.message })
         }
     } catch (error) {
-        console.error('Error al eliminar el producto:', error.message)
+        console.error('Error al eliminar el producto:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -181,11 +179,12 @@ router.delete('/:cid', authorization('user'), async (req, res) => {
             res.status(500).json({ error: result.message })
         }
     } catch (error) {
-        console.error('Error al eliminar los productos:', error.message)
+        console.error('Error al eliminar los productos:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
 
 module.exports = router
+
 
 

@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const authMiddleware = require('../middlewares/private-acces-middleware')
+const authMiddleware = require('../middlewares/Private-acces-middleware')
 const publicAcces = require('../middlewares/public-acces-middleware')
 const router = Router()
 

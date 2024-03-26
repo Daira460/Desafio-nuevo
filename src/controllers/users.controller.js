@@ -40,7 +40,7 @@ router.post('/', passport.authenticate('register', { failureRedirect: '/api/user
     try {
         res.status(201).json({ status: 'success', message: 'Usuario' });
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Error:', error.causa);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -59,7 +59,7 @@ router.put('/', async (req, res) => {
 
         res.status(200).json({ status: 'success', message: 'User cart updated successfully' });
     } catch (error) {
-        console.error('Error al actualizar el carrito del usuario:', error.message);
+        console.error('Error al actualizar el carrito del usuario:', error.causa);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

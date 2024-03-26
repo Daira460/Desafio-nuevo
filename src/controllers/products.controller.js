@@ -7,7 +7,7 @@ const ErrorPersonalizado = require('../errores/Error-Personalizado');
 const TiposErrores = require('../errores/tipos-errores');
 const generateProductErrorDetails = require('../errores/generateProductErrorDetails');
 const CodigosErrores = require('../errores/codigos_errores');
-const generateProducts = require ('../utils/products-mocks.util')
+const generateProducts = require('../utils/products-mocks.util');
 
 router.get('/', async (req, res) => {
     try {
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
             style: 'style.css',
         });
     } catch (error) {
-        console.error('Error al obtener los productos:', error.message);
+        console.error('Error al obtener los productos:', error.causa);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -38,11 +38,12 @@ router.get('/', async (req, res) => {
 router.get('/mockingproducts', async (req, res) => {
     try {
         const products = generateProducts()
-        res.render ('home', { 
+        res.render('home', {
             products,
-             style: 'style.css',})
+            style: 'style.css',
+        })
     } catch (error) {
-        console.error ('Error al obtener los products:', error.message)
+        console.error('Error al obtener los products:', error.causa)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -53,7 +54,7 @@ router.get('/:pid', async (req, res) => {
         const { user } = req.session;
         const productFilter = await ProductsService.getProductByID(pid);
         if (!productFilter) {
-            return res.status(404).json({ error: 'El producto con el id buscado no existe.'});
+            return res.status(404).json({ error: 'El producto con el id buscado no existe.' });
         }
         res.render('productFilter', {
             user,
@@ -62,7 +63,7 @@ router.get('/:pid', async (req, res) => {
             style: 'style.css',
         });
     } catch (error) {
-        console.error('Error al obtener los productos:', error.message);
+        console.error('Error al obtener los productos:', error.causa);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -70,7 +71,7 @@ router.get('/:pid', async (req, res) => {
 router.post("/", authorization('admin'), async (req, res, next) => {
     try {
         const { code, description, price, stock, thumbnail, title, category } = req.body;
-        if (!title || !description || !code || !price || !stock || !category ) {
+        if (!title || !description || !code || !price || !stock || !category) {
             ErrorPersonalizado.crearError({
                 nombre: TiposErrores.ERROR_AL_CREAR_PRODUCTO,
                 causa: generateProductErrorDetails({ title, description, code, price, stock, category }),
@@ -95,7 +96,7 @@ router.put('/:pid', authorization('admin'), async (req, res) => {
         const { pid } = req.params;
         const { ...product } = req.body;
         if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
-            return res.status(404).json ({error: "Todos los campos son obligatorios. Producto no agregado."});
+            return res.status(404).json({ error: "Todos los campos son obligatorios. Producto no agregado." });
         }
         await ProductsService.updateProduct({ ...product, id: pid });
         res.json({ message: 'Producto Actualizado correctamente' });
@@ -109,7 +110,7 @@ router.delete('/:pid', authorization('admin'), async (req, res) => {
         const { pid } = req.params;
         const result = await ProductsService.deleteProduct(pid);
         if (result === false) {
-            return res.status(404).json({ error: 'El producto con el id buscado no existe.'});
+            return res.status(404).json({ error: 'El producto con el id buscado no existe.' });
         } else {
             res.json({ message: 'Producto borrado correctamente' });
         }
@@ -119,3 +120,4 @@ router.delete('/:pid', authorization('admin'), async (req, res) => {
 });
 
 module.exports = router;
+
