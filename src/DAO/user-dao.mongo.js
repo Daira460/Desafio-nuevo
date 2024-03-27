@@ -5,7 +5,7 @@ class UserDao {
         try {
             return await Users.findOne({ _id: uid }).exec()
         } catch (error) {
-            throw new Error('Error al obtener el usuario de la base de datos')
+            throw new Error('Error al obtener el usuario en la base de datos')
         }
     }
   

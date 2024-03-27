@@ -36,11 +36,11 @@ const initializePassport = () => {
         try {
             const user = await Users.findOne({ email: username })
         if (!user) {
-            console.log ('usuario o contraseña incorrecta')
+            console.error ('usuario o contraseña incorrecta')
             return done (null, false)
         }
         if (!useValidPassword (user, password)) {
-            console.log ('usuario o contraseña incorrecta')
+            console.error ('usuario o contraseña incorrecta')
             return done (null, error)
         }
         return done (null, user)

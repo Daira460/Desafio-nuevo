@@ -21,9 +21,9 @@ router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-l
             cart: req.user.cart,
         }
         res.json ({status: 'success', message: 'Login Succesfull'})
-     } catch (error) {
-        console.error ('Error:', error.message)
-        res.status(500).json({ error: 'Internal Server Error' })
+    } catch (error) {
+       req.logger.error ('Error:', error)
+       res.status(500).json({ error: 'Internal Server Error' })
     }
 })
 
@@ -39,7 +39,7 @@ router.get('/current', (req, res) => {
 
 router.get('/fail-login', (req, res) => {
     console.log ('Fallo el logueo')
-    res.status().json({status: 'error',  error: 'bad Request' })
+    res.status(400).json({status: 'error',  error: 'bad Request' })
 })
 
 router.get('/logout', async (req, res) => {
@@ -52,8 +52,8 @@ router.get('/logout', async (req, res) => {
             }
         })
     } catch (error) {
-        console.error ('Error:', error.message)
-        res.status(500).json({ error: error })
+        req.logger.error ('Error:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 })
 
@@ -64,8 +64,8 @@ router.post('/forgotPassword', async (req, res) => {
         await Users.updateOne ({email}, {password: passwordEncrypted})
         res.status(200).json ({status: 'Success', message: 'Password Updated'})
     } catch (error) {
-    console.error ('Error:', error.message)
-    res.status(500).json({ error: error })
+        req.logger.error ('Error:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 })
 

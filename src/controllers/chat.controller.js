@@ -8,7 +8,7 @@ router.get('/', authorization('user'), async (req, res) => {
      res.render ('chat', {style:'style.css'})  
     } catch (error) {
 
-        console.error ('Error al cargar el chat:', error.message)
+        req.logger.error ('Error al cargar el chat:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
    

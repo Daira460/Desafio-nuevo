@@ -17,7 +17,7 @@ function submitForm() {
     .then(response => {
         if (!response.ok) {
 
-            throw new Error('Error al registrar usuario');
+            throw new Error('Error al registrar el usuario');
         }
         return response.json();
     })

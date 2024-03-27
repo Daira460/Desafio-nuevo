@@ -9,7 +9,8 @@ class ProductRepository {
         try {
             return await this.productDao.getProductByID(id)
         } catch (error) {
-            throw error
+            console.error(error)
+
         }
     }
 
@@ -17,7 +18,8 @@ class ProductRepository {
         try {
             return await this.productDao.addProduct(product)
         } catch (error) {
-            throw error
+            console.error(error)
+
         }
     }
 
@@ -25,7 +27,8 @@ class ProductRepository {
         try {
             await this.productDao.updateProduct(productUpdated)
         } catch (error) {
-            throw error
+            console.error(error)
+
         }
     }
 
@@ -33,7 +36,8 @@ class ProductRepository {
         try {
             return await this.productDao.deleteProduct(pid)
         } catch (error) {
-            throw error
+            console.error(error)
+
         }
     }
 
@@ -41,7 +45,8 @@ class ProductRepository {
         try {
             await this.productDao.updateStock(productsInStock) 
         } catch (error) {
-            throw error
+            console.error(error)
+
           }  
        }
 }

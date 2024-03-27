@@ -12,5 +12,6 @@ module.exports = {
     userEmail: process.env.USER_EMAIL,
     userPassword: process.env.USER_PASSWORD,
     PortMailer: process.env.PORT_MAILER,
+    environment: process.env.NODE_ENV || 'dev',
 
 }

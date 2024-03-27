@@ -30,7 +30,7 @@ router.get('/:cid', async (req, res) => {
             })
         }
     } catch (error) {
-        console.error('Error al obtener el carrito:', error.causa)
+        req.logger.error ('Error al obtener el carrito:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -52,7 +52,7 @@ router.get('/:cid/purchase', async (req, res) => {
             style: 'style.css',
         })
     } catch (error) {
-        console.error('Error al obtener el ticket:', error.causa)
+        req.logger.error ('Error al obtener el ticket ya creado:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
         const result = await CartService.addCart()
         res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
     } catch (error) {
-        console.error('Error al cargar productos:', error.causa)
+        req.logger.error ('Error al cargar los productos:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -74,7 +74,7 @@ router.post('/:cid/products/:pid', authorization('user'), async (req, res, next)
         const product = await ProductsService.getProductByID(pid)
 
         if (!product) {
-            throw new ErrorPersonalizado({
+            throw new ErrorPersonalizado.crearError({
                 nombre: TiposErrores.PRODUCTO_NO_ENCONTRADO,
                 causa: 'El producto con el ID proporcionado no existe.',
                 mensaje: 'El producto con el ID proporcionado no existe.',
@@ -87,7 +87,7 @@ router.post('/:cid/products/:pid', authorization('user'), async (req, res, next)
             req.session.user.cart = cid
             res.status(201).json({ mensaje: result.message })
         } else {
-            throw new ErrorPersonalizado({
+            throw new ErrorPersonalizado.crearError({
                 nombre: TiposErrores.ERROR_SERVIDOR_INTERNO,
                 causa: 'Error al agregar el producto al carrito.',
                 mensaje: result.message,
@@ -128,7 +128,7 @@ router.post('/:cid/purchase', async (req, res) => {
             orderNumber: orderNumber,
         })
     } catch (error) {
-        console.error('Error al crear una orden:', error.causa)
+        req.logger.error ('Error:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -147,7 +147,7 @@ router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
             res.status(500).json({ error: result.message })
         }
     } catch (error) {
-        console.error('Error al actualizar la cantidad del producto:', error.causa)
+        req.logger.error ('Error al actualizar la cantidad de productos:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -162,8 +162,8 @@ router.delete('/:cid/products/:pid', authorization('user'), async (req, res) => 
         } else {
             res.status(500).json({ error: result.message })
         }
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error.causa)
+    }catch (error) {
+        req.logger.error ('Error al eliminar un producto:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -178,8 +178,8 @@ router.delete('/:cid', authorization('user'), async (req, res) => {
         } else {
             res.status(500).json({ error: result.message })
         }
-    } catch (error) {
-        console.error('Error al eliminar los productos:', error.causa)
+    }  catch (error) {
+        req.logger.error ('Error al eliminar todos los productos:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })

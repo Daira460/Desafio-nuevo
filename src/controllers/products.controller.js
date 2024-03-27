@@ -29,9 +29,9 @@ router.get('/', async (req, res) => {
             sort,
             style: 'style.css',
         });
-    } catch (error) {
-        console.error('Error al obtener los productos:', error.causa);
-        res.status(500).json({ error: 'Internal Server Error' });
+    }  catch (error) {
+        req.logger.error ('Error:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 });
 
@@ -43,7 +43,7 @@ router.get('/mockingproducts', async (req, res) => {
             style: 'style.css',
         })
     } catch (error) {
-        console.error('Error al obtener los products:', error.causa)
+        req.logger.error ('Error al obtener los productos:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
 })
@@ -63,8 +63,8 @@ router.get('/:pid', async (req, res) => {
             style: 'style.css',
         });
     } catch (error) {
-        console.error('Error al obtener los productos:', error.causa);
-        res.status(500).json({ error: 'Internal Server Error' });
+        req.logger.error ('Error al obtener el producto:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 });
 
@@ -101,7 +101,8 @@ router.put('/:pid', authorization('admin'), async (req, res) => {
         await ProductsService.updateProduct({ ...product, id: pid });
         res.json({ message: 'Producto Actualizado correctamente' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar el producto.' });
+        req.logger.error ('Error:', error)
+        res.status(500).json({ error: 'Error al actualizar el producto.' })
     }
 });
 
@@ -114,8 +115,9 @@ router.delete('/:pid', authorization('admin'), async (req, res) => {
         } else {
             res.json({ message: 'Producto borrado correctamente' });
         }
-    } catch (error) {
-        res.status(500).json({ error: 'Error al borrar un producto.' });
+    }catch (error) {
+        req.logger.error ('Error:', error)
+        res.status(500).json({ error: 'Error al borrar un producto.' })
     }
 });
 

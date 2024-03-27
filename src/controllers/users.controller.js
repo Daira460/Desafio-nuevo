@@ -12,7 +12,7 @@ router.get('/user-cart', async (req, res, next) => {
         const cid = req.session.cart;
         if (!cid) {
             if (!req.user) {
-                throw new ErrorPersonalizado({
+                throw new ErrorPersonalizado.crearError({
                     nombre: TiposErrores.NO_AUTORIZADO,
                     causa: 'No estás autenticado',
                     mensaje: 'No estás autenticado',
@@ -22,7 +22,7 @@ router.get('/user-cart', async (req, res, next) => {
             const uid = req.user._id;
             const userCart = await UserService.getUserCart(uid);
             if (!userCart) {
-                throw new ErrorPersonalizado({
+                throw new ErrorPersonalizado.crearError({
                     nombre: TiposErrores.USUARIO_NO_EXISTE,
                     causa: 'No se encontró el usuario en la base de datos',
                     mensaje: 'El usuario no existe',
@@ -40,14 +40,14 @@ router.post('/', passport.authenticate('register', { failureRedirect: '/api/user
     try {
         res.status(201).json({ status: 'success', message: 'Usuario' });
     } catch (error) {
-        console.error('Error:', error.causa);
-        res.status(500).json({ error: 'Internal Server Error' });
+        req.logger.error ('Error en la authenticacion de usuario:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 });
 
 router.get('/fail-Register', (req, res) => {
-    console.log('Fallo registro');
-    res.status(400).json({ status: 'error', error: 'Bad Request' });
+    req.logger.info ('fallo el registro de usuario')
+    res.status(400).json({status: 'error',  error: 'bad Request' })
 });
 
 router.put('/', async (req, res) => {
@@ -59,8 +59,8 @@ router.put('/', async (req, res) => {
 
         res.status(200).json({ status: 'success', message: 'User cart updated successfully' });
     } catch (error) {
-        console.error('Error al actualizar el carrito del usuario:', error.causa);
-        res.status(500).json({ error: 'Internal Server Error' });
+        req.logger.error ('Error al actualizar el carrito del usuario:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
     }
 });
 
