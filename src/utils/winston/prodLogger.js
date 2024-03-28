@@ -1,11 +1,9 @@
-const winston = require ('winston')
-const customWinston = require('./custom.winston')
+const winston = require('winston')
+const customWinston = require('../winston/custom.winston')
 
-const winstonlogger = winston.createLogger ({
-
+const winstonLogger = winston.createLogger({
     levels: customWinston.levels,
     transports: [
-
         new winston.transports.Console({ 
             level: 'info',
             format: winston.format.combine(
@@ -13,12 +11,12 @@ const winstonlogger = winston.createLogger ({
                 winston.format.simple(),
             )
         }),
-        
-        new winston.transports.File({
-            filename: './errors.log',
+        new winston.transports.File({ 
+            filename: 'errors.log', 
             level: 'error',
-            format: winston.format.simple() })
+            format: winston.format.simple(),
+        })
     ]
 })
 
-module.exports = winstonlogger
+module.exports = winstonLogger
