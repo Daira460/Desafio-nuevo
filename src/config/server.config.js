@@ -13,5 +13,6 @@ module.exports = {
     userPassword: process.env.USER_PASSWORD,
     PortMailer: process.env.PORT_MAILER,
     environment: process.env.NODE_ENV || 'dev',
+    jwtSecret: process.env.JWT_SECRET,
 
 }

@@ -2,6 +2,7 @@ const { Router } = require('express')
 const authMiddleware = require('../middlewares/Private-acces-middleware')
 const publicAcces = require('../middlewares/public-acces-middleware')
 const router = Router()
+const { authTokenMiddleware } = require('../utils/jwt.util')
 
 router.get('/login', publicAcces , async (req, res) => {
     try {
@@ -38,6 +39,15 @@ router.get('/profile', authMiddleware, async (req, res) => {
             req.logger.error ('Error al resetear password:', error)
             res.status(500).json({ error: 'Internal Server Error' }) 
         }})
+        router.get('/RecoveryKey', async (req, res) => {
+            try {
+                res.render ('RecoveryKey', { style:'style.css'})   
+            } catch (error) {
+                req.logger.error ('Error al recuperar la clave:', error)
+                res.status(500).json({ error: 'Internal Server Error' })
+            }
+        })
+
 
         
         router.get ('/loggerTest', async (req,res) => {
@@ -55,6 +65,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
             }  
         })
     
+
 
 
 module.exports = router

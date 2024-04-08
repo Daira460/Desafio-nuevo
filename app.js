@@ -10,8 +10,9 @@ const session = require('express-session');
 const initializePassport = require('./src/config/passport.config.js')
 const passport = require('passport')
 const errorMiddleware = require('./src/middlewares/errores-middlewares/errors')
-
+const logger = require('./src/middlewares/logger.middleware.js')
 const app = express()
+app.use(logger)
 
 // Configuración de Handlebars
 const hbs = handlebars.create({
