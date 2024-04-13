@@ -7,7 +7,7 @@ async function getUserCart(uid) {
         const user = await User.getUserById(uid)
         return user ? user.cart : null
     } catch (error) {
-        throw new Error('Error al obtener el carrito del usuario')
+        console.log (error)
     }
 }
 
@@ -15,17 +15,25 @@ async function updateUserCart(uid, cid) {
     try {
         await User.updateUserCart(uid, cid)
     } catch (error) {
-        throw new Error('Error al actualizar el carrito del usuario')
+        console.log (error)
     }
 }
+
 async function createUser(newUserDto) {
     try {
         const createdUser = await User.createUser(newUserDto);
         messageManager.sendMessage(createdUser)
         return createdUser;
     } catch (error) {
-        console.error('Error al crear un usuario:', error);
-        throw new Error('Error al crear un usuario');
+        console.log (error)
+    }
+}
+
+async function toggleUserRole(uid) {
+    try {
+        await User.toggleUserRole(uid)
+    } catch (error) {
+        console.log (error)
     }
 }
 
@@ -33,5 +41,6 @@ async function createUser(newUserDto) {
 module.exports = {
     getUserCart,
     updateUserCart,
-    createUser,
+    toggleUserRole,
+    createUser
 }

@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
         });
     }  catch (error) {
         req.logger.error ('Error:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 });
 
@@ -44,7 +44,7 @@ router.get('/mockingproducts', async (req, res) => {
         })
     } catch (error) {
         req.logger.error ('Error al obtener los productos:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
@@ -64,11 +64,11 @@ router.get('/:pid', async (req, res) => {
         });
     } catch (error) {
         req.logger.error ('Error al obtener el producto:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 });
 
-router.post("/", authorization('admin'), async (req, res, next) => {
+router.post("/", authorization(['admin', 'premium']), async (req, res, next) => {
     try {
         const { code, description, price, stock, thumbnail, title, category } = req.body;
         if (!title || !description || !code || !price || !stock || !category) {
@@ -78,48 +78,81 @@ router.post("/", authorization('admin'), async (req, res, next) => {
                 mensaje: 'Error al crear el producto',
                 codigo: CodigosErrores.ERROR_AL_CREAR_PRODUCTO,
             });
+           
+           
+            return
         }
-        const result = await ProductsService.addProduct({ code, description, price, stock, thumbnail, title, category });
-        if (result.success) {
-            res.status(201).json({ message: "Producto creado correctamente" });
-        } else {
-            res.status(400).json({ error: result.message });
+          if (req.session.user.role === 'premium') {
+             const owner = req.session.user.email
+             const result = await ProductsService.addProduct({code,description,price,stock,thumbnail,title,category,owner})
+             if (result.success) {
+               res.status(201).json({ status: 'Success', message: "Producto creado por el usuario premium correctamente" })
+             } else {
+               res.status(400).json({ error: result.message })
+             }
+             return
+          } 
+          const result = await ProductsService.addProduct({code,description,price,stock,thumbnail,title,category})
+          if (result.success) {
+            res.status(201).json({ status: 'Success', message: "Producto creado por el admin correctamente" })
+          } else {
+            res.status(400).json({ error: result.message })
+          }
+          return
+        } catch (error) {
+            next(error)
         }
-        return;
-    } catch (error) {
-        next(error);
-    }
-});
+    })
+    
 
 router.put('/:pid', authorization('admin'), async (req, res) => {
     try {
         const { pid } = req.params;
         const { ...product } = req.body;
         if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
-            return res.status(404).json({ error: "Todos los campos son obligatorios. Producto no agregado." });
+            return res.status(404).json({ error: "Todos los campos son obligatorios. El producto no fue agregado." });
         }
         await ProductsService.updateProduct({ ...product, id: pid });
-        res.json({ message: 'Producto Actualizado correctamente' });
+        res.json({ message: 'Producto actualizado correctamente' });
     } catch (error) {
         req.logger.error ('Error:', error)
         res.status(500).json({ error: 'Error al actualizar el producto.' })
     }
 });
 
-router.delete('/:pid', authorization('admin'), async (req, res) => {
+router.delete('/:pid', authorization(['admin', 'premium']), async (req, res) => {
     try {
         const { pid } = req.params;
-        const result = await ProductsService.deleteProduct(pid);
-        if (result === false) {
-            return res.status(404).json({ error: 'El producto con el id buscado no existe.' });
+        if (req.session.user.role === 'premium') {
+            const productFilter =  await ProductsService.getProductByID(pid)
+            if (!productFilter) {
+                return res.status(404).json({status: 'failure', error: 'El producto con el id que esta buscando no existe.'})
+            }  if (productFilter.owner === req.session.user.email) {
+
+                const result = await ProductsService.deleteProduct(pid)
+                if (result === false) {
+
+                    return res.status(404).json({ error: 'El producto con el id que esta buscado no existe.'})
+                } else {
+                    res.json({status: 'Success', message: 'Producto borrado correctamente por el usuario premium' })
+                }  
+            } else {
+                return res.status(401).json({status: 'failure', error: 'No puede borrar productos que sean de otro usuario.'})
+            }
         } else {
-            res.json({ message: 'Producto borrado correctamente' });
+            const result = await ProductsService.deleteProduct(pid)
+            if (result === false) {
+                return res.status(404).json({ error: 'El producto con el id que esta buscado no existe.'})
+            } else {
+                res.json({ status: 'Success', message: 'El producto fue borrado correctamente por el admin' })
+            }
+
         }
-    }catch (error) {
+    } catch (error) {
         req.logger.error ('Error:', error)
         res.status(500).json({ error: 'Error al borrar un producto.' })
     }
-});
+})
 
 module.exports = router;
 

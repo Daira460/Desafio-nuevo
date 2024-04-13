@@ -30,10 +30,10 @@ const errorMiddleware = (error, req, res, next) => {
                     break;
             }
         } else { 
-            res.status(CodigosErrores.IERROR_SERVIDOR_INTERNO).json({ status: 'error', error: 'Internal server error' });
+            res.status(CodigosErrores.ERROR_SERVIDOR_INTERNO).json({ status: 'error', error: 'Error interno del servidor' });
         } 
      } else  {
-            res.status(CodigosErrores.ERROR_SERVIDOR_INTERNO).json({ status: 'error', error: 'Internal server error' });
+            res.status(CodigosErrores.ERROR_SERVIDOR_INTERNO).json({ status: 'error', error: 'Error interno del servidor' });
         }
     };
 

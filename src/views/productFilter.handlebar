@@ -1,6 +1,8 @@
+
 {{#if user.first_name }}
-    <h1>Bienvenido/a {{user.first_name}}</h1>
+    <h1>Bienvenido {{user.first_name}}</h1>
 {{else}}
+    <h1>Bienvenido</h1>
     <p class="parrafoLoguearse">Por favor iniciar sesión para realizar una compra.</p>
 {{/if}}
 
@@ -18,16 +20,14 @@
                         Precio:${{productFilter.price}} Cantidad:{{productFilter.stock}}
                     </p>
                 </div>
-                {{#if user.first_name}}
+                {{#isEqual ../user.role 'user'}}
                 <button class="botonAgregarCarrito btn btn2" data-pid="{{pid}}" data-cid="{{user.cart}}">
                     Agregar al Carrito
                 </button> 
-                {{/if}}
+                {{/isEqual}}
             </div>
-
     </section>
 </main>
-
 
 
 <script src="/js/products.js"></script>

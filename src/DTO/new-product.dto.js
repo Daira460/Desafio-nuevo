@@ -7,6 +7,7 @@ class NewProductDto {
         this.code = newProduct.code
         this.stock = newProduct.stock
         this.status = true
+        this.owner = newProduct.owner
         this.category = newProduct.category
     }
 }

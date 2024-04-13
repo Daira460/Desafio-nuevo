@@ -22,11 +22,25 @@
                         Precio:${{price}} Cantidad:{{stock}}
                     </p>
                 </div>
+                {{#isEqual ../user.role 'premium'}}
+                   ID de producto: {{_id}}
+                   Owner: {{owner}}
+                {{/isEqual}}
+                {{#isEqual ../user.role 'admin'}}
+                   ID de producto: {{_id}}
+                   Owner: {{owner}}
+                {{/isEqual}}
                 {{#isEqual ../user.role 'user'}}
                     <button class="botonAgregarCarrito btn btn2" data-pid="{{_id}}" data-cid="{{../user.cart}}">
                         Agregar al Carrito
                     </button> 
                 {{/isEqual}}
+                {{#isEqual ../user.role 'premium'}}
+                    <button class="botonAgregarCarrito btn btn2" data-pid="{{_id}}" data-cid="{{../user.cart}}">
+                        Agregar al Carrito
+                    </button> 
+                {{/isEqual}}
+                
             </div>
         {{/each}}
         </div>

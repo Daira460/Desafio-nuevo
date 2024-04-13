@@ -68,7 +68,7 @@ class CartDao {
             }
         } catch (error) {
             console.error('Error al agregar el producto al carrito:', error)
-            return { success: false, message: 'internal server error' }
+            return { success: false, message: 'Error interno del servidor' }
         }
     }
 
@@ -127,7 +127,7 @@ class CartDao {
         }
     } catch (error) {
         console.error('Error al actualizar la cantidad del producto:', error)
-        return { success: false, message: 'Internal server error' }
+        return { success: false, message: 'Error interno del servidor' }
     }
 }
         
@@ -157,7 +157,7 @@ class CartDao {
             }
         } catch (error) {
             console.error('Error al eliminar el producto del carrito:', error)
-            return { success: false, message: 'Internal server error' }
+            return { success: false, message: 'Error interno del servidor' }
         }
     }
         
@@ -178,7 +178,7 @@ class CartDao {
         }
     } catch (error) {
         console.error('Error al eliminar el producto del carrito:', error)
-        return { success: false, message: 'Internal server error' }
+        return { success: false, message: 'Error interno del servidor' }
     }
   }
 

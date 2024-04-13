@@ -4,7 +4,7 @@ function submitForm() {
     }
 
 
-    fetch('/api/auth/RecoveryKey', {
+    fetch('/api/auth/recoveryKey', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

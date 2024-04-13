@@ -24,6 +24,22 @@ class UserDao {
         } catch (error) {
             throw new Error('Error al crear un usuario')
         }
+        
+    }
+    async toggleUserRole(uid) {
+        try {
+            const user = await Users.findById(uid)
+            if (!user) {
+                throw new Error('No se encontró al usuario')
+            }
+    
+            user.role = user.role === 'user' ? 'premium' : 'user'
+            await user.save()
+    
+            return user
+        } catch (error) {
+            console.error (error)       
+         }
     }
 }
 

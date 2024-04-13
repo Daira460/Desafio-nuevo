@@ -14,12 +14,27 @@ function submitForm() {
         headers: {
             'Content-Type': 'application/json',
         },
+
         body: JSON.stringify(formData),
     })
+
     .then(response => response.json())
     .then(data => {
-        console.log(data)
-          alert('Producto creado correctamente')  
+       if (responseData.status === 'Success') { // 
+
+            Swal.fire({
+                icon: "success",
+                title: "Producto creado correctamente",
+              })
+
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Ops..",
+                text: "Error al crear el producto",
+              })
+        }
     })
+
     .catch(error => console.error('Error:', error))
 }

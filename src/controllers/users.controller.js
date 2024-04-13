@@ -4,8 +4,8 @@ const passport = require('passport');
 const UserService = require('../services/user.service');
 const ErrorPersonalizado = require('../errores/Error-Personalizado');
 const TiposErrores = require('../errores/tipos-errores');
-const generateProductErrorDetails = require('../errores/generateProductErrorDetails');
 const CodigosErrores = require('../errores/codigos_errores');
+const Users = require('../DAO/models/user.model')
 
 router.get('/user-cart', async (req, res, next) => {
     try {
@@ -40,8 +40,8 @@ router.post('/', passport.authenticate('register', { failureRedirect: '/api/user
     try {
         res.status(201).json({ status: 'success', message: 'Usuario' });
     } catch (error) {
-        req.logger.error ('Error en la authenticacion de usuario:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        req.logger.error ('Error en la autenticacion de usuario:', error)
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 });
 
@@ -60,8 +60,18 @@ router.put('/', async (req, res) => {
         res.status(200).json({ status: 'success', message: 'User cart updated successfully' });
     } catch (error) {
         req.logger.error ('Error al actualizar el carrito del usuario:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
-});
+});router.put('/premium/:uid', async (req, res) => {
+    try {
+        const { uid } = req.params
+        await UserService.toggleUserRole(uid)
+        res.status(200).json({ status: 'success', message: 'Actualizacion del role es correcta' })
+    } catch (error) {
+        req.logger.error ('Error al cambiar el role del usuario:', error)
+        res.status(500).json({ error: 'Error al modificar el nivel de autorización del usuario' });
+    }
+})
+
 
 module.exports = router;

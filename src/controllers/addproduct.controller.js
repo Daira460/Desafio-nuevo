@@ -10,7 +10,7 @@ router.get('/', authorization('admin'), async (req, res) => {
         style:'style.css'})   
     } catch (error) {
         console.error ('Error al obtener los products:', error.message)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 

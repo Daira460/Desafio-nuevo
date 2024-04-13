@@ -31,7 +31,7 @@ router.get('/:cid', async (req, res) => {
         }
     } catch (error) {
         req.logger.error ('Error al obtener el carrito:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
@@ -53,7 +53,7 @@ router.get('/:cid/purchase', async (req, res) => {
         })
     } catch (error) {
         req.logger.error ('Error al obtener el ticket ya creado:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
@@ -63,12 +63,12 @@ router.post('/', async (req, res) => {
         res.status(201).json({ message: 'Carrito creado correctamente', cid: result.cid })
     } catch (error) {
         req.logger.error ('Error al cargar los productos:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
 
-router.post('/:cid/products/:pid', authorization('user'), async (req, res, next) => {
+router.post('/:cid/products/:pid', authorization('user', 'premium'), async (req, res, next) => {
     try {
         const { cid, pid } = req.params
         const product = await ProductsService.getProductByID(pid)
@@ -129,12 +129,12 @@ router.post('/:cid/purchase', async (req, res) => {
         })
     } catch (error) {
         req.logger.error ('Error:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
 
-router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
+router.put('/:cid/products/:pid', authorization('user', 'premium'), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
@@ -148,11 +148,11 @@ router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
         }
     } catch (error) {
         req.logger.error ('Error al actualizar la cantidad de productos:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
-router.delete('/:cid/products/:pid', authorization('user'), async (req, res) => {
+router.delete('/:cid/products/:pid', authorization('user', 'premium'), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const result = await CartService.deleteProductInCart(cid, pid)
@@ -164,11 +164,11 @@ router.delete('/:cid/products/:pid', authorization('user'), async (req, res) => 
         }
     }catch (error) {
         req.logger.error ('Error al eliminar un producto:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 
-router.delete('/:cid', authorization('user'), async (req, res) => {
+router.delete('/:cid', authorization('user', 'premium'), async (req, res) => {
     try {
         const { cid } = req.params
         const result = await CartService.deleteProductsInCart(cid)
@@ -180,7 +180,7 @@ router.delete('/:cid', authorization('user'), async (req, res) => {
         }
     }  catch (error) {
         req.logger.error ('Error al eliminar todos los productos:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
 })
 

@@ -12,19 +12,16 @@ class ProductDao {
       } 
   }
 
+
     async addProduct(product) {
       try {
-          const { title, description, price, thumbnail, code, stock, category } = product
-          if (!title || !description || !price || !code || !stock || !category) {
-            console.error ("Todos los campos son obligatorios. Producto no agregado.")
-            return { success: false, message: "Todos los campos son obligatorios. Producto no agregado." }
-          }
-
+          const { code } = product
           const codeExist = await Products.findOne({ code: code})
           if (codeExist) {
             console.error (`El producto con code: ${code} ya existe. Por favor, seleccione otro.`)
             return { success: false, message: `El producto con code: ${code} ya existe. Por favor, seleccione otro.` }
           }
+
 
           const NewProductInfo = new NewProductDto(product)
 
@@ -34,7 +31,7 @@ class ProductDao {
 
       } catch (error) {
         console.error('Error al cargar productos:', error.message)
-        return { success: false, message: 'Error interno al procesar la solicitud.' }
+        return { success: false, message: 'Error interno al procesar tu solicitud.' }
       }
     }
 
@@ -42,8 +39,8 @@ class ProductDao {
         try {
           await Products.findOneAndUpdate( {_id: productUpdated.id}, productUpdated )
           if (!productUpdated.id) {
-            console.error("Producto no encontrado con ID:", productUpdated.id)
-            throw new Error("Producto no encontrado")
+            console.error("Producto no encontrado con el ID:", productUpdated.id)
+            throw new Error("El producto no fue encontrado")
           } 
           console.log("Producto actualizado correctamente:", productUpdated.id)
         } catch (error) {
@@ -56,7 +53,7 @@ class ProductDao {
       try {    
         const idExist = await Products.updateOne({ _id: id }, { $set: { status: false } })
         if (idExist) {
-          console.log("Producto borrado correctamente")}
+          console.log("El producto fue borrado correctamente")}
       } catch (error) {
         console.error("Error al borrar el producto:", error.message)
         return false
@@ -80,7 +77,7 @@ class ProductDao {
             foundProduct.stock -= quantity
 
             await foundProduct.save()
-            console.log(`Stock del producto ${foundProduct.title} actualizado correctamente`)
+            console.log(`Stock del producto ${foundProduct.title} fue actualizado correctamente`)
         }
 
         console.log('Todos los stocks actualizados correctamente')
@@ -89,8 +86,10 @@ class ProductDao {
     }
   }
 
-  }
+}
+
 
 module.exports = ProductDao
+
 
 

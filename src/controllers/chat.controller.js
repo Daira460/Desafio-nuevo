@@ -9,7 +9,7 @@ router.get('/', authorization('user'), async (req, res) => {
     } catch (error) {
 
         req.logger.error ('Error al cargar el chat:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({ error: 'Error interno del servidor' })
     }
    
 })
