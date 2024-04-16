@@ -1,4 +1,5 @@
 function submitForm() {
+    
     const formData = {
         title: document.getElementById('title').value,
         description: document.getElementById('description').value,

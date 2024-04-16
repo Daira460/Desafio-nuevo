@@ -1,4 +1,3 @@
-
 class MessageRepository {
     constructor(adapter){
         this.adapter = adapter

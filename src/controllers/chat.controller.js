@@ -4,8 +4,7 @@ const authorization = require('../middlewares/authorization-middleware')
 
 router.get('/', authorization('user'), async (req, res) => {
     try {
-
-     res.render ('chat', {style:'style.css'})  
+        res.render ('chat', {style:'style.css'})  
     } catch (error) {
 
         req.logger.error ('Error al cargar el chat:', error)

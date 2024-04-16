@@ -6,7 +6,7 @@ const swaggerOptions = {
         openapi: '3.1.0',
         info: {
             title: 'Documentacion de la API REST',
-            description: 'Documentacion API REST de GreenBite'
+            description: 'Documentacion de la API REST de GreenBite'
         }
     },
     apis: [`src/docs/**/*.yaml`]

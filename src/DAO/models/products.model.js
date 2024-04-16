@@ -1,5 +1,6 @@
 const mongoose = require ('mongoose')
 const mongoosePaginate = require ('mongoose-paginate-v2')
+
 const productsCollection = 'product'
 
 const productsSchema = new mongoose.Schema({

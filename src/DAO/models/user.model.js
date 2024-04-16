@@ -21,10 +21,11 @@ const userSchema = new mongoose.Schema({
         ref: 'cart',
         default: null,
     },
+
     githubId: Number,
     githubUsername: String,
 })
 
-const Users = mongoose.model (userColletion, userSchema)
+const Users = mongoose.model (userSchema, userColletion)
 
 module.exports = Users

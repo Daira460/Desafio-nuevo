@@ -10,6 +10,7 @@ const cartsSchema = new mongoose.Schema({
         ref: Products, 
         required: true,
       },
+      
       quantity: {
         type: Number,
         required: true,
