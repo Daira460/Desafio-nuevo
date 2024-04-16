@@ -8,6 +8,6 @@ const messageSchema = new mongoose.Schema({
     message: String,
 })
 
-const Messages = mongoose.model(messageSchema,  messageCollection)
+const Messages = mongoose.model(messageCollection, messageSchema)
 
 module.exports = Messages

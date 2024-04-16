@@ -15,6 +15,6 @@ const purchaseSchema = new mongoose.Schema({
   purchaser: String,
 })
 
-const Purchase = mongoose.model(purchaseSchema, purchaseCollection);
+const Purchase = mongoose.model(purchaseCollection, purchaseSchema)
 
 module.exports = Purchase;

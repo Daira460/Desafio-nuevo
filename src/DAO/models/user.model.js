@@ -26,6 +26,6 @@ const userSchema = new mongoose.Schema({
     githubUsername: String,
 })
 
-const Users = mongoose.model (userSchema, userColletion)
+const Users = mongoose.model (userColletion, userSchema)
 
 module.exports = Users
