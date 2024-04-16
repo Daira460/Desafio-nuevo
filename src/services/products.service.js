@@ -50,6 +50,7 @@ module.exports = {
     getProductByID,
     addProduct,
     updateProduct,
-    deleteProduct,
-    updateStock
+    updateStock,
+    deleteProduct
+    
 };

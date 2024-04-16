@@ -5,7 +5,6 @@ const UserService = require('../services/user.service');
 const ErrorPersonalizado = require('../errores/Error-Personalizado');
 const TiposErrores = require('../errores/tipos-errores');
 const CodigosErrores = require('../errores/codigos_errores');
-const Users = require('../DAO/models/user.model')
 
 router.get('/user-cart', async (req, res, next) => {
     try {
@@ -28,6 +27,8 @@ router.get('/user-cart', async (req, res, next) => {
                     mensaje: 'El usuario no existe',
                     codigo: CodigosErrores.NO_ENCONTRADO,
                 });
+                
+                return
             }
             res.status(200).json({ estado: 'éxito', cid: userCart });
         }

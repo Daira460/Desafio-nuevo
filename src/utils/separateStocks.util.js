@@ -11,7 +11,7 @@ function separateStocks(products) {
         }
     })
 
-    return { productsInStock, productsOutOfStock }
+    return { productsOutOfStock , productsInStock}
 }
 
 

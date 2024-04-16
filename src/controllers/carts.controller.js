@@ -81,6 +81,9 @@ router.post('/:cid/products/:pid', authorization('user', 'premium'), async (req,
                 codigo: CodigosErrores.NO_ENCONTRADO,
             })
         }
+        if (product.owner === req.session.user.email) {
+            return res.status(401).json({ error: 'bad request'})
+        }
 
         const result = await CartService.addProductInCart(cid, pid)
         if (result.success) {
@@ -152,13 +155,13 @@ router.put('/:cid/products/:pid', authorization('user', 'premium'), async (req, 
     }
 })
 
-router.delete('/:cid/products/:pid', authorization('user', 'premium'), async (req, res) => {
+router.delete('/:cid/products/:pid', authorization(['user', 'premium']), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const result = await CartService.deleteProductInCart(cid, pid)
 
         if (result.success) {
-            res.status(201).json({ message: result.message })
+            res.status(200).json({ message: result.message })
         } else {
             res.status(500).json({ error: result.message })
         }
@@ -168,13 +171,13 @@ router.delete('/:cid/products/:pid', authorization('user', 'premium'), async (re
     }
 })
 
-router.delete('/:cid', authorization('user', 'premium'), async (req, res) => {
+router.delete('/:cid', authorization(['user', 'premium']), async (req, res) => {
     try {
         const { cid } = req.params
         const result = await CartService.deleteProductsInCart(cid)
 
         if (result.success) {
-            res.status(201).json({ message: result.message })
+            res.status(200).json({ message: result.message })
         } else {
             res.status(500).json({ error: result.message })
         }

@@ -12,6 +12,7 @@ const passport = require('passport')
 const errorMiddleware = require('./src/middlewares/errores-middlewares/errors')
 const logger = require('./src/middlewares/logger.middleware.js')
 const app = express()
+const { swaggerDocs } = require ('./src/swagger/Swagger.js')
 app.use(logger)
 
 // Configuración de Handlebars
@@ -52,6 +53,7 @@ app.set('view engine', 'handlebars')
 
 const httpServer = app.listen(port, () => {
   console.log(`Server running at port ${port}`)
+  swaggerDocs(app)
 })
 
 const io = new Server(httpServer);

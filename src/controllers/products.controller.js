@@ -18,6 +18,11 @@ router.get('/', async (req, res) => {
         }
         const products = docs;
         const { user } = req.session;
+
+        if (totalPages && parseInt(page) > totalPages) {
+            return res.redirect(`/api/products?page=${totalPages}`)
+            } 
+
         res.render('home', {
             user,
             products,

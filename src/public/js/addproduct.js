@@ -19,12 +19,12 @@ function submitForm() {
     })
 
     .then(response => response.json())
-    .then(data => {
+    .then(responseData => {
        if (responseData.status === 'Success') { // 
 
             Swal.fire({
                 icon: "success",
-                title: "Producto creado correctamente",
+                title: "Producto creado exitosamente",
               })
 
         } else {

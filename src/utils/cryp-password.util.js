@@ -10,4 +10,4 @@ const useValidPassword = (user, password) => {
     return bcrypt.compareSync(password, user.password)
 }
 
-module.exports = {createHash, useValidPassword}
+module.exports = {useValidPassword,createHash}

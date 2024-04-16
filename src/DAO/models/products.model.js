@@ -1,6 +1,5 @@
 const mongoose = require ('mongoose')
 const mongoosePaginate = require ('mongoose-paginate-v2')
-
 const productsCollection = 'product'
 
 const productsSchema = new mongoose.Schema({
@@ -14,7 +13,8 @@ const productsSchema = new mongoose.Schema({
     },
     stock: Number,
     status: Boolean,
-    category: String,  owner: {
+    category: String,  
+    owner: {
         type:String,
         default: 'admin'
     },
