@@ -99,7 +99,7 @@
       grid-template-columns: repeat(5, 1fr);
     }}
 
-  /*Estilo del Navbar*/
+
 
     nav {
       background-color: rgb(63, 22, 104);
@@ -657,7 +657,6 @@ margin: 50px 100px 0px 100px;
 
 
 .contenedorProfile {
-  background-image: url(../img/profile2.jpg);
   background-size: cover;
   height: 100vh;
   display: flex;
@@ -703,4 +702,84 @@ margin: 50px 100px 0px 100px;
 .center {
   text-align: center;
   margin-top: 40px;
+}
+
+
+/* Estilos para el carrito de compras */
+.carritoFinal {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.imgCarrito {
+  max-width: 100px;
+}
+
+.iconoBasura {
+  color: red;
+  cursor: pointer;
+}
+
+.parrafoCarrito {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.alineadoCarrito {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalPrecio {
+  font-weight: bold;
+}
+
+.totalTexto {
+  font-weight: bold;
+}
+
+.tituloCarrito {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tamañoLinea {
+  border-bottom: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+.bi {
+  font-weight: bold;
+}
+
+.contenedorTachito {
+  margin-left: 10px;
+}
+
+.cancelarCompra {
+  background-color: #ff6347;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contenedorCheckout {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.checkout {
+  background-color: #325c73;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

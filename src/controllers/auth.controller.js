@@ -8,8 +8,10 @@ const transport = require('../utils/nodemailer.util')
 const { userEmail } = require('../config/server.config')
 const { createToken } = require('../utils/jwt.util')
 const jwt = require('jsonwebtoken')
-const { jwtSecret } = require('../configs/app.config')
-const { error } = require('winston')
+const { jwtSecret } = require('../config/server.config')
+const { error } = require('winston') 
+
+
 
 router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-login'}) , async (req, res) => {
     try {
