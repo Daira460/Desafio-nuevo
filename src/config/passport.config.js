@@ -62,7 +62,7 @@ const initializePassport = () => {
                             first_name: name,
                             email: email,
                             githubId: id,
-                            githubUsername: login
+                            githubUsername: login,
                         };
                         user = await Users.create(newUserInfo);
                     }
