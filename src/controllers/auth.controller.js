@@ -9,7 +9,7 @@ const { userEmail } = require('../config/server.config')
 const { createToken } = require('../utils/jwt.util')
 const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../config/server.config')
-const { error } = require('winston') 
+
 
 
 
@@ -26,7 +26,7 @@ router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-l
             role: req.user.role,
             cart: req.user.cart,
         }
-        res.json({status: 'success', message: 'Login Succesfull'})
+        res.json({status: 'success', message: 'Inicio de sesión exitoso'})
      } catch (error) {
         req.logger.error ('Error:', error)
         res.status(500).json({ error: 'Error interno del servidor' })
@@ -38,7 +38,7 @@ router.get('/current', (req, res) => {
         const userDTO = new SensibleDTO(req.user)
         res.json({ message: userDTO })
     } else {
-        res.status(401).json({status: 'error', message: 'User is not authenticated' })
+        res.status(401).json({status: 'error', message: 'El usuario no está autenticado' })
     }
 })
 
@@ -54,12 +54,11 @@ router.get('/logout', async (req, res) => {
             if (err) {
                 return res.status(500).json({ error: 'Error interno del servidor' })
             } else {
-                return res.status(200).json({ message: 'Logout successful' })
+                return res.status(200).json({ message: 'Cierre de sesión exitoso' })
             }
         })
     } catch (error) {
-        req.logger.error ('Error:', error)
-        res.status(500).json({ error: 'Error interno del servidor' })
+        next(error)
     }
 })
 
@@ -74,15 +73,14 @@ router.post('/forgotPassword', async (req, res) => {
 
         const user = await Users.findOne({ email }) 
         if (useValidPassword (user, password)) {
-         return res.status(400).json({ error: 'Invalid password', message: 'New password must be different from the current password' });       
+         return res.status(400).json({ error: 'Contraseña inválida', message: 'La nueva contraseña debe ser diferente a la contraseña actual' });       
         }
         
         await Users.updateOne({ email }, { password: passwordEncrypted });
 
-        res.status(200).json({ status: 'Success', message: 'Password Updated' });
-    } catch (error) {
-        req.logger.error(error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(200).json({ status: 'Success', message: 'Contraseña Actualizada' });
+    }  catch (error) {
+        next(error)
     }
 })
 
@@ -98,7 +96,7 @@ router.post('/recoveryKey', async (req, res) => {
 
             const token =  createToken(TokenInfoUser)
 
-            const recoveryLink = `http://localhost:3030/forgotPassword?token=${token}`
+            const recoveryLink = `http://localhost:3000/forgotPassword?token=${token}`
 
             transport.sendMail({
                 from: userEmail,
@@ -118,8 +116,7 @@ router.post('/recoveryKey', async (req, res) => {
             res.status(404).json({ status: 'Error', message: 'El correo no está registrado' })
         }
     } catch (error) {
-        req.logger.error ('Error:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
+        next(error)
     }
 })
 

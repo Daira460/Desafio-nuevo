@@ -40,7 +40,7 @@ const initializePassport = () => {
         }
         if (!useValidPassword (user, password)) {
             console.error ('Usuario o contraseña incorrecta')
-            return done (null, error)            
+            return done (null, falses)            
         }
         return done (null, user)
         }catch (error) {

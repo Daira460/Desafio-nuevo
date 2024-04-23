@@ -49,18 +49,23 @@ class ProductDao {
         }
       }
 
-    async deleteProduct(id) {
-      try {    
-        const idExist = await Products.updateOne({ _id: id }, { $set: { status: false } })
-        if (idExist) {
-          console.log("El producto fue borrado correctamente")}
-      } catch (error) {
-        console.error("Error al borrar el producto:", error.message)
-        return false
-      }
-    }
+      async deleteProduct(id) {
+        try {
+            const idExist = await Products.updateOne({ _id: id }, { $set: { status: false } })
+            if (idExist) {
+                console.log("El producto fue borrado correctamente")
+                return { success: true }
+            }
 
+            console.error("El producto no existe con ID:", id)
+            return { success: false, message: 'El producto no existe.' }
+        } catch (error) {
+            console.error("Error al borrar el producto:", error.message)
+            return { success: false, message: 'Error interno al procesar la solicitud.' }
+        }
+    }
     
+
   async updateStock(productsInStock) {
     try {
         for (const product of productsInStock) {

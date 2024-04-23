@@ -13,7 +13,7 @@ class UserDao {
         try {
             await Users.updateOne({ _id: uid }, { cart: cid }).exec()
         } catch (error) {
-            throw new Error('Error al actualizar el carrito del usuario en la base de datos')
+            throw new Error('Error al actualizar el carrito del usuario en nuestra base de datos')
         }
     }
  
@@ -37,6 +37,7 @@ class UserDao {
             await user.save()
     
             return user
+            
         } catch (error) {
             console.error (error)       
          }

@@ -21,7 +21,7 @@ function submitForm() {
 
     .then(response => response.json())
     .then(responseData => {
-       if (responseData.status === 'Success') { // 
+       if (responseData.status === 'Success') { 
 
             Swal.fire({
                 icon: "success",
