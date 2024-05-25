@@ -3,9 +3,10 @@ const local = require('passport-local');
 const GithubStrategy = require('passport-github2');
 const { useValidPassword } = require('../utils/cryp-password.util');
 const { ghClientId, ghClientSecret } = require('../config/server.config');
-const NewUserDto = require('../DTO/new-user.dto');
 const UserService = require('../services/user.service');
+const NewUserDto = require('../DTO/new-user.dto');
 const Users = require('../DAO/models/user.model');
+
 
 const LocalStrategy = local.Strategy;
 
@@ -38,10 +39,13 @@ const initializePassport = () => {
             console.error ('Usuario o contraseña incorrecta')
             return done (null, false)
         }
-        if (!useValidPassword (user, password)) {
-            console.error ('Usuario o contraseña incorrecta')
-            return done (null, falses)            
+        if (user.status === false) {
+            console.error ('usuario desactivado por inactividad')
+            return done (null, false)
         }
+        
+        const uid = user._id
+        await UserService.lastConnection(uid)
         return done (null, user)
         }catch (error) {
             return done (error)

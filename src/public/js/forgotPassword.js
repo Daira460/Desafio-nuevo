@@ -24,7 +24,7 @@ function submitForm() {
             console.log("Error al restaurar la contraseña")
             Swal.fire({
                 icon: "error",
-                title: "Ops..",
+                title: "Vaya, ha ocurrido un error.",
                 text: "La nueva contraseña debe ser diferente a la anterior",
               });
         }

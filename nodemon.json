@@ -4,10 +4,10 @@
     "execMap": {
       "yaml": "node"
     },
-
+    
     "watch": [
+      "*.js",
       "*.yaml"
     ]
-
-}
+  }
   

@@ -7,10 +7,10 @@ class MailAdapter {
         await transport.sendMail({
             from: userEmail,
             to: messageInfo.email,
-            subject: 'Bienvenido/a',
+            subject: 'Bienvenido/a a GreenBite',
             html: `
                 <h1>Hola ${messageInfo.first_name}</h1>
-                <p>Mira las promociones actuales que tenemos</p>
+                <p>Mira las promociones actuales que tenemos para vos</p>
             `,
             attachments: [
                 {

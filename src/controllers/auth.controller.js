@@ -1,14 +1,9 @@
 const { Router } = require('express')
-const Users = require('../DAO/models/user.model')
-const { createHash, useValidPassword } = require('../utils/cryp-password.util')
 const passport = require('passport')
 const router = Router()
-const SensibleDTO = require ('../DTO/sensible-user')
-const transport = require('../utils/nodemailer.util')
-const { userEmail } = require('../config/server.config')
-const { createToken } = require('../utils/jwt.util')
 const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../config/server.config')
+const SensibleDTO = require ('../DTO/sensible-user')
 
 
 
@@ -28,8 +23,7 @@ router.post ('/', passport.authenticate('login', {failureRedirect: '/auth/fail-l
         }
         res.json({status: 'success', message: 'Inicio de sesión exitoso'})
      } catch (error) {
-        req.logger.error ('Error:', error)
-        res.status(500).json({ error: 'Error interno del servidor' })
+        next(error)
     }
 })
 
@@ -45,10 +39,10 @@ router.get('/current', (req, res) => {
 
 router.get('/fail-login', (req, res) => {
     req.logger.info ('Fallo el logueo')
-    res.status(400).json({status: 'error',  error: 'bad Request' })
+    res.status(400).json({status: 'error',  error: 'Solicitud Incorrecta.' })
 })
 
-router.get('/logout', async (req, res) => {
+router.get('/logout', async (req, res, next) => {
     try {
         req.session.destroy(err => {
             if (err) {
@@ -61,60 +55,26 @@ router.get('/logout', async (req, res) => {
         next(error)
     }
 })
-
-router.post('/forgotPassword', async (req, res) => {
+router.post('/forgotPassword', async (req, res, next) => {
     try {
-        const token = req.body.token; 
-        const decodedToken = jwt.verify(token, jwtSecret); 
-        const email = decodedToken.email; 
+        const token = req.body.token
+        const decodedToken = jwt.verify(token, jwtSecret) 
+        const email = decodedToken.email 
+        const { password } = req.body
 
-        const { password } = req.body;
-        const passwordEncrypted = createHash(password);
+        await UserService.updatePassword(email, password)
 
-        const user = await Users.findOne({ email }) 
-        if (useValidPassword (user, password)) {
-         return res.status(400).json({ error: 'Contraseña inválida', message: 'La nueva contraseña debe ser diferente a la contraseña actual' });       
-        }
-        
-        await Users.updateOne({ email }, { password: passwordEncrypted });
-
-        res.status(200).json({ status: 'Success', message: 'Contraseña Actualizada' });
-    }  catch (error) {
+        res.status(200).json({ status: 'Success', message: 'Password Updated' })
+    } catch (error) {
         next(error)
     }
 })
 
-router.post('/recoveryKey', async (req, res) => {
+router.post('/recoveryKey', async (req, res, next) => {
     try {
-        const {email} = req.body
-        const userExist = await Users.findOne ({email})
-      
-        if (userExist) {
-            const TokenInfoUser = {
-                email: userExist.email,
-            }
-
-            const token =  createToken(TokenInfoUser)
-
-            const recoveryLink = `http://localhost:3000/forgotPassword?token=${token}`
-
-            transport.sendMail({
-                from: userEmail,
-                to: userExist.email,
-                subject: 'Restablece tu clave en GreenBite',
-                html: `
-                    <h1>Hola ${userExist.first_name}</h1>
-                    <p style="margin-bottom: 20px;">Has solicitado restablecer tu contraseña en GreenBite.</p>
-                    <p>Por favor, presiona sobre el siguiente botón para cambiar tu clave. Este enlace solo será válido durante 1 hora.</p>
-                    <a id="recoveryLink" href="${recoveryLink}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Restablecer Contraseña</a>                
-                `,
-            })
-           
-            res.status(200).json({ status: 'Success', message: 'El correo se encuentra registrado' })
-        } else {
-         
-            res.status(404).json({ status: 'Error', message: 'El correo no está registrado' })
-        }
+        const { email } = req.body
+        const result = await UserService.sendRecoveryEmail(email)
+        res.status(result.status === 'Success' ? 200 : 404).json(result)
     } catch (error) {
         next(error)
     }

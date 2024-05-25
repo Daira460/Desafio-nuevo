@@ -52,12 +52,12 @@ function submitForm() {
         })
     })
     .catch(error => {
-  
         console.error('Error:', error);
+        
         Swal.fire({
             icon: "error",
-            title: "Ops..",
-            text: "Error, el correo ya se encuentra registrado",
+            title: "Vaya, ha ocurrido un error.",
+            text: "Error al crear el usuario"
           });
     });
 }

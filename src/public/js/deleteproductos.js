@@ -20,7 +20,7 @@ function submitForm() {
         } else {
             Swal.fire({
                 icon: "error",
-                title: "Ops..",
+                title: "Vaya, ha ocurrido un error.",
                 text: "Error al borrar el producto",
               })
         }

@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
 
     githubId: Number,
     githubUsername: String,
+    documents: [{
+        name: String,
+        reference: String,
+    }],
+    status: Boolean,
+    last_connection: Date,
 })
 
 const Users = mongoose.model (userColletion, userSchema)

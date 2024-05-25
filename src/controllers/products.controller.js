@@ -8,6 +8,8 @@ const TiposErrores = require('../errores/tipos-errores');
 const generateProductErrorDetails = require('../errores/generateProductErrorDetails');
 const CodigosErrores = require('../errores/codigos_errores');
 const generateProducts = require('../utils/products-mocks.util');
+const transport = require('../utils/nodemailer.util.js');
+const { userEmail } = require('../config/server.config.js');
 
 router.get('/', async (req, res) => {
     try {

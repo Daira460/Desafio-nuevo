@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
 })
 
 
-router.post('/:cid/products/:pid', authorization('user', 'premium'), async (req, res, next) => {
+router.post('/:cid/products/:pid', authorization(['user', 'premium']), async (req, res, next) => {
     try {
         const { cid, pid } = req.params
         const product = await ProductsService.getProductByID(pid)
@@ -137,7 +137,7 @@ router.post('/:cid/purchase', async (req, res) => {
 })
 
 
-router.put('/:cid/products/:pid', authorization('user', 'premium'), async (req, res) => {
+router.put('/:cid/products/:pid', authorization(['user', 'premium']), async (req, res) => {
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
